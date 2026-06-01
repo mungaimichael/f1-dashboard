@@ -1,4 +1,4 @@
-import type { DriverStanding } from "./types.js";
+import type { DriverStanding, Race, Session } from "./types.js";
 
 const JOLPICA_BASE_URL =
   process.env.JOLPICA_BASE_URL ?? "https://api.jolpi.ca/ergast/f1";
@@ -68,6 +68,121 @@ export async function getDriverStandings(): Promise<DriverStanding[]> {
       constructorId: constructor?.constructorId ?? "unknown",
       points: Number(standing.points),
       wins: Number(standing.wins)
+    };
+  });
+}
+
+type JolpicaLocation = {
+  lat: string;
+  long: string;
+  locality: string;
+  country: string;
+};
+
+type JolpicaCircuit = {
+  circuitId: string;
+  url: string;
+  circuitName: string;
+  Location: JolpicaLocation;
+};
+
+type JolpicaSession = {
+  date: string;
+  time: string;
+};
+
+type JolpicaRace = {
+  season: string;
+  round: string;
+  url: string;
+  raceName: string;
+  date: string;
+  time?: string;
+  Circuit: JolpicaCircuit;
+  FirstPractice?: JolpicaSession;
+  SecondPractice?: JolpicaSession;
+  ThirdPractice?: JolpicaSession;
+  Qualifying?: JolpicaSession;
+  Sprint?: JolpicaSession;
+};
+
+type RacesResponse = {
+  MRData: {
+    RaceTable: {
+      season: string;
+      Races: JolpicaRace[];
+    };
+  };
+};
+
+export async function getRaceCalendar(): Promise<Race[]> {
+  const data = await fetchJson<RacesResponse>("/current/races.json");
+
+  const races = data.MRData.RaceTable.Races;
+
+  return races.map((race) => {
+    const loc = race.Circuit.Location;
+    const lat = loc.lat ? Number(loc.lat) : null;
+    const lng = loc.long ? Number(loc.long) : null;
+
+    const sessions: Session[] = [];
+
+    if (race.FirstPractice) {
+      sessions.push({
+        name: "Practice 1",
+        date: race.FirstPractice.date,
+        time: race.FirstPractice.time ?? null
+      });
+    }
+    if (race.SecondPractice) {
+      sessions.push({
+        name: "Practice 2",
+        date: race.SecondPractice.date,
+        time: race.SecondPractice.time ?? null
+      });
+    }
+    if (race.ThirdPractice) {
+      sessions.push({
+        name: "Practice 3",
+        date: race.ThirdPractice.date,
+        time: race.ThirdPractice.time ?? null
+      });
+    }
+    if (race.Qualifying) {
+      sessions.push({
+        name: "Qualifying",
+        date: race.Qualifying.date,
+        time: race.Qualifying.time ?? null
+      });
+    }
+    if (race.Sprint) {
+      sessions.push({
+        name: "Sprint",
+        date: race.Sprint.date,
+        time: race.Sprint.time ?? null
+      });
+    }
+
+    sessions.push({
+      name: "Race",
+      date: race.date,
+      time: race.time ?? null
+    });
+
+    return {
+      round: Number(race.round),
+      season: race.season,
+      raceName: race.raceName,
+      circuitId: race.Circuit.circuitId,
+      circuitName: race.Circuit.circuitName,
+      locality: loc.locality,
+      country: loc.country,
+      lat,
+      lng,
+      date: race.date,
+      time: race.time ?? null,
+      isSprint: race.Sprint !== undefined,
+      sessions
     };
   });
 }

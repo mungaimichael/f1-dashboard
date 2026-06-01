@@ -1,5 +1,5 @@
 import { createSchema } from "graphql-yoga";
-import { getDriverStandings } from "./f1Api.js";
+import { getDriverStandings, getRaceCalendar } from "./f1Api.js";
 
 export const schema = createSchema({
   typeDefs: /* GraphQL */ `
@@ -31,14 +31,39 @@ export const schema = createSchema({
       wins: Int!
     }
 
+    type Session {
+      name: String!
+      date: String!
+      time: String
+    }
+
+    type Race {
+      round: Int!
+      season: String!
+      raceName: String!
+      circuitId: ID!
+      circuitName: String!
+      locality: String!
+      country: String!
+      lat: Float
+      lng: Float
+      date: String!
+      time: String
+      isSprint: Boolean!
+      sessions: [Session!]!
+    }
+
     type Query {
       "Current Formula 1 driver standings."
       driverStandings: [DriverStanding!]!
+      "Current season race calendar."
+      raceCalendar: [Race!]!
     }
   `,
   resolvers: {
     Query: {
-      driverStandings: () => getDriverStandings()
+      driverStandings: () => getDriverStandings(),
+      raceCalendar: () => getRaceCalendar()
     }
   }
 });
