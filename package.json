@@ -1,0 +1,15 @@
+{
+  "name": "f1-graphql-sse-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Weekend demo showing GraphQL consumption and server-sent events with F1 data.",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w web"
+  }
+}
