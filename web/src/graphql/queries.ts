@@ -13,3 +13,20 @@ export const GET_DRIVER_STANDINGS = gql`
     }
   }
 `;
+
+export const GET_DRIVER = gql`
+  query GetDriver($id: ID!) {
+    driver(id: $id) {
+      id
+      position
+      code
+      name
+      givenName
+      familyName
+      nationality
+      team
+      points
+      wins
+    }
+  }
+`;

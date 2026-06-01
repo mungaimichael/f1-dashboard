@@ -8,8 +8,18 @@ export type DriverStanding = {
   wins: number;
 };
 
+export type DriverDetail = DriverStanding & {
+  givenName: string;
+  familyName: string;
+  nationality: string;
+};
+
 export type DriverStandingsData = {
   driverStandings: DriverStanding[];
+};
+
+export type DriverDetailData = {
+  driver: DriverDetail | null;
 };
 
 export type RaceEventType =
@@ -28,4 +38,4 @@ export type RaceEvent = {
   occurredAt: string;
 };
 
-export type ConnectionState = "connecting" | "open" | "closed" | "error";
+export type ConnectionState = "connecting" | "open" | "closed" | "error" | "reconnecting";

@@ -1,20 +1,28 @@
 import { useQuery } from "@apollo/client/react";
+import { useState } from "react";
+import { DriverModal } from "./components/DriverModal";
 import { DriverStandingsTable } from "./components/DriverStandingsTable";
 import { LiveEventFeed } from "./components/LiveEventFeed";
+import { Toast } from "./components/Toast";
 import { GET_DRIVER_STANDINGS } from "./graphql/queries";
 import { useRaceEvents } from "./hooks/useRaceEvents";
+import { useToast } from "./hooks/useToast";
 import type { DriverStandingsData } from "./types";
 
 export function App() {
   const { data, loading, error, refetch } = useQuery<DriverStandingsData>(
     GET_DRIVER_STANDINGS,
-    {
-      fetchPolicy: "cache-and-network"
-    }
+    { fetchPolicy: "cache-and-network" }
   );
-  const { events, connectionState } = useRaceEvents();
+  const { events, connectionState, currentLap, reconnectAttempt, totalLaps } = useRaceEvents();
+  const { toast, dismiss } = useToast(events);
+  const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
 
   const graphqlStatus = loading ? "Loading…" : error ? "Error" : "Ready";
+  const sseLabel =
+    connectionState === "reconnecting"
+      ? `Reconnecting (${reconnectAttempt})`
+      : connectionState;
 
   return (
     <main className="app-shell">
@@ -35,11 +43,28 @@ export function App() {
         </div>
         <div>
           <span>SSE stream</span>
-          <strong>{connectionState}</strong>
+          <strong data-reconnecting={connectionState === "reconnecting"}>{sseLabel}</strong>
         </div>
         <div>
           <span>Events</span>
           <strong>{events.length}</strong>
+        </div>
+        <div>
+          <span>Lap</span>
+          <strong>{currentLap} / {totalLaps}</strong>
+          <div
+            className="lap-progress"
+            role="progressbar"
+            aria-valuenow={currentLap}
+            aria-valuemin={1}
+            aria-valuemax={totalLaps}
+            aria-label={`Lap ${currentLap} of ${totalLaps}`}
+          >
+            <div
+              className="lap-progress-fill"
+              style={{ width: `${(currentLap / totalLaps) * 100}%` }}
+            />
+          </div>
         </div>
       </section>
 
@@ -51,9 +76,22 @@ export function App() {
       ) : null}
 
       <div className="dashboard-grid">
-        <DriverStandingsTable standings={data?.driverStandings ?? []} loading={loading && !data} />
+        <DriverStandingsTable
+          standings={data?.driverStandings ?? []}
+          loading={loading && !data}
+          onSelectDriver={setSelectedDriverId}
+        />
         <LiveEventFeed events={events} connectionState={connectionState} />
       </div>
+
+      {toast ? <Toast event={toast} onDismiss={dismiss} /> : null}
+
+      {selectedDriverId ? (
+        <DriverModal
+          driverId={selectedDriverId}
+          onClose={() => setSelectedDriverId(null)}
+        />
+      ) : null}
     </main>
   );
 }

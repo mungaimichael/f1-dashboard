@@ -164,21 +164,20 @@ button:active {
   flex-wrap: wrap;
 }
 
-.status-strip div {
-  align-items: center;
+.status-strip > div {
+  align-items: flex-start;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 2px;
   padding: 14px 18px;
   flex: 1 1 120px;
   transition: border-color var(--duration) var(--ease-out);
 }
 
-.status-strip div:hover {
+.status-strip > div:hover {
   border-color: var(--border);
 }
 
@@ -546,13 +545,271 @@ tbody tr:last-child td {
 }
 
 /* ─────────────────────────────────────────────
+   Filter bar (Feature 1 — filter by event type)
+   ───────────────────────────────────────────── */
+.filter-bar {
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 20px;
+}
+
+.filter-btn {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  min-height: 26px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+.filter-btn:hover {
+  background: var(--bg-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+.filter-btn[aria-pressed="true"] {
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ─────────────────────────────────────────────
+   Toast notification (Feature 2 — safety car)
+   ───────────────────────────────────────────── */
+.toast {
+  align-items: flex-start;
+  animation: toast-in 0.3s var(--ease-out);
+  background: var(--amber-subtle);
+  border: 1px solid var(--amber);
+  border-radius: var(--radius);
+  bottom: 28px;
+  box-shadow: 0 8px 32px oklch(0% 0 0 / 0.5);
+  display: flex;
+  gap: 12px;
+  left: 50%;
+  max-width: 420px;
+  padding: 14px 16px;
+  position: fixed;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  z-index: 100;
+}
+
+.toast-body {
+  display: grid;
+  flex: 1;
+  gap: 3px;
+}
+
+.toast-body strong {
+  color: var(--amber);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.toast-body span {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.toast-close {
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+  min-height: auto;
+  padding: 0 2px;
+}
+
+.toast-close:hover {
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-primary);
+  transform: none;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Lap progress (Feature 3 — lap counter)
+   ───────────────────────────────────────────── */
+.lap-progress {
+  background: var(--bg-hover);
+  border-radius: 999px;
+  height: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.lap-progress-fill {
+  background: var(--accent);
+  border-radius: 999px;
+  height: 100%;
+  transition: width 1s var(--ease-out);
+}
+
+/* ─────────────────────────────────────────────
+   Reconnecting state (Feature 4)
+   ───────────────────────────────────────────── */
+.status-strip strong[data-reconnecting="true"] {
+  color: var(--amber);
+}
+
+/* ─────────────────────────────────────────────
+   Clickable driver rows (Feature 6)
+   ───────────────────────────────────────────── */
+.driver-row {
+  cursor: pointer;
+}
+
+/* ─────────────────────────────────────────────
+   Driver detail modal (Feature 6 — lazy query)
+   ───────────────────────────────────────────── */
+.modal-backdrop {
+  align-items: center;
+  animation: fade-in 0.15s ease;
+  background: oklch(0% 0 0 / 0.65);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding: 20px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.modal {
+  animation: modal-in 0.2s var(--ease-out);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 440px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.modal-header {
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 20px;
+}
+
+.modal-header h2 {
+  font-size: 1rem;
+}
+
+.modal-close {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  min-height: 30px;
+  padding: 0 10px;
+}
+
+.modal-close:hover {
+  background: var(--bg-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-loading {
+  display: grid;
+  gap: 10px;
+}
+
+.modal-dl {
+  display: grid;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.modal-dl-row {
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 0;
+}
+
+.modal-dl-row:last-child {
+  border-bottom: 0;
+}
+
+.modal-dl-row dt {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.modal-dl-row dd {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  margin: 0;
+}
+
+.modal-empty {
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  margin: 0;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────
    Reduced motion
    ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .dot-open {
-    animation: none;
-  }
-  .event-item {
+  .dot-open,
+  .event-item,
+  .toast,
+  .modal,
+  .modal-backdrop {
     animation: none;
   }
 }

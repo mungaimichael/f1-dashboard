@@ -4,15 +4,22 @@ import type { DriverStanding } from "../types";
 type Props = {
   standings: DriverStanding[];
   loading?: boolean;
+  onSelectDriver: (id: string) => void;
 };
 
 const DriverStandingRow = memo(function DriverStandingRow({
-  driver
+  driver,
+  onSelect
 }: {
   driver: DriverStanding;
+  onSelect: (id: string) => void;
 }) {
   return (
-    <tr>
+    <tr
+      className="driver-row"
+      onClick={() => onSelect(driver.id)}
+      title={`View ${driver.name} details`}
+    >
       <td className="rank" data-pos={driver.position}>P{driver.position}</td>
       <td>
         <div className="driver-cell">
@@ -31,13 +38,13 @@ const DriverStandingRow = memo(function DriverStandingRow({
   );
 });
 
-export function DriverStandingsTable({ standings, loading }: Props) {
+export function DriverStandingsTable({ standings, loading, onSelectDriver }: Props) {
   return (
     <section className="standings-section" aria-labelledby="standings-title">
       <div className="section-heading">
         <h2 id="standings-title">Driver standings</h2>
         <span>
-          {loading ? "Loading…" : `${standings.length} drivers`}
+          {loading ? "Loading…" : `${standings.length} drivers — click a row for details`}
         </span>
       </div>
 
@@ -60,7 +67,11 @@ export function DriverStandingsTable({ standings, loading }: Props) {
               </tr>
             ) : (
               standings.map((driver) => (
-                <DriverStandingRow key={driver.id} driver={driver} />
+                <DriverStandingRow
+                  key={driver.id}
+                  driver={driver}
+                  onSelect={onSelectDriver}
+                />
               ))
             )}
           </tbody>

@@ -34,11 +34,17 @@ export const schema = createSchema({
     type Query {
       "Current Formula 1 driver standings."
       driverStandings: [DriverStanding!]!
+      "A single driver by their Jolpica ID. Returns null if not found."
+      driver(id: ID!): DriverStanding
     }
   `,
   resolvers: {
     Query: {
-      driverStandings: () => getDriverStandings()
+      driverStandings: () => getDriverStandings(),
+      driver: async (_: unknown, { id }: { id: string }) => {
+        const standings = await getDriverStandings();
+        return standings.find((d) => d.id === id) ?? null;
+      }
     }
   }
 });

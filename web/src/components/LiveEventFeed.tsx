@@ -1,10 +1,12 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import type { ConnectionState, RaceEvent, RaceEventType } from "../types";
 
 type Props = {
   events: RaceEvent[];
   connectionState: ConnectionState;
 };
+
+const ALL_TYPES: RaceEventType[] = ["OVERTAKE", "FASTEST_LAP", "PIT_STOP", "SAFETY_CAR"];
 
 const eventLabels: Record<RaceEventType, string> = {
   OVERTAKE:    "Overtake",
@@ -13,7 +15,6 @@ const eventLabels: Record<RaceEventType, string> = {
   SAFETY_CAR:  "Safety car"
 };
 
-// Maps event type to a modifier class for distinct coloring
 const eventTypeClass: Record<RaceEventType, string> = {
   OVERTAKE:    "event-type--overtake",
   FASTEST_LAP: "event-type--fastest_lap",
@@ -21,11 +22,7 @@ const eventTypeClass: Record<RaceEventType, string> = {
   SAFETY_CAR:  "event-type--safety_car"
 };
 
-const RaceEventItem = memo(function RaceEventItem({
-  event
-}: {
-  event: RaceEvent;
-}) {
+const RaceEventItem = memo(function RaceEventItem({ event }: { event: RaceEvent }) {
   return (
     <li className="event-item">
       <div>
@@ -40,7 +37,23 @@ const RaceEventItem = memo(function RaceEventItem({
 });
 
 export function LiveEventFeed({ events, connectionState }: Props) {
+  const [activeFilters, setActiveFilters] = useState<Set<RaceEventType>>(
+    new Set(ALL_TYPES)
+  );
+
   const isOpen = connectionState === "open";
+
+  function toggleFilter(type: RaceEventType) {
+    setActiveFilters((prev) => {
+      // Keep at least one filter active
+      if (prev.has(type) && prev.size === 1) return prev;
+      const next = new Set(prev);
+      next.has(type) ? next.delete(type) : next.add(type);
+      return next;
+    });
+  }
+
+  const visibleEvents = events.filter((e) => activeFilters.has(e.type));
 
   return (
     <section className="feed-section" aria-labelledby="feed-title">
@@ -52,13 +65,27 @@ export function LiveEventFeed({ events, connectionState }: Props) {
         </span>
       </div>
 
-      {events.length === 0 ? (
+      <div className="filter-bar" role="group" aria-label="Filter by event type">
+        {ALL_TYPES.map((type) => (
+          <button
+            key={type}
+            type="button"
+            className="filter-btn"
+            aria-pressed={activeFilters.has(type)}
+            onClick={() => toggleFilter(type)}
+          >
+            {eventLabels[type]}
+          </button>
+        ))}
+      </div>
+
+      {visibleEvents.length === 0 ? (
         <div className="empty-feed" aria-live="polite">
-          Waiting for race events
+          {events.length === 0 ? "Waiting for race events" : "No events match the filter"}
         </div>
       ) : (
         <ol className="event-list" aria-live="polite" aria-label="Live race events">
-          {events.map((event) => (
+          {visibleEvents.map((event) => (
             <RaceEventItem key={event.id} event={event} />
           ))}
         </ol>
