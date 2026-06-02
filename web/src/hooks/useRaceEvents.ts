@@ -6,7 +6,7 @@ const MAX_EVENTS = 24;
 
 export function useRaceEvents(url = EVENTS_URL) {
   const [events, setEvents] = useState<RaceEvent[]>([]);
-  
+  const [totalReceived, setTotalReceived] = useState(0);
   const [connectionState, setConnectionState] =
     useState<ConnectionState>("connecting");
 
@@ -20,6 +20,7 @@ export function useRaceEvents(url = EVENTS_URL) {
     source.addEventListener("race-event", (event) => {
       const payload = JSON.parse(event.data) as RaceEvent;
 
+      setTotalReceived((n) => n + 1);
       setEvents((currentEvents) => [
         payload,
         ...currentEvents.slice(0, MAX_EVENTS - 1)
@@ -38,6 +39,7 @@ export function useRaceEvents(url = EVENTS_URL) {
 
   return {
     events,
+    totalReceived,
     connectionState
   };
 }

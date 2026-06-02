@@ -17,7 +17,7 @@ export function App() {
     useQuery<RaceCalendarData>(GET_RACE_CALENDAR, {
       fetchPolicy: "cache-and-network"
     });
-  const { events, connectionState } = useRaceEvents();
+  const { events, totalReceived, connectionState } = useRaceEvents();
 
   const graphqlStatus = loading ? "Loading…" : error ? "Error" : "Ready";
 
@@ -51,7 +51,7 @@ export function App() {
         </div>
         <div>
           <span>Events</span>
-          <strong>{events.length}</strong>
+          <strong>{totalReceived}</strong>
         </div>
       </section>
 
