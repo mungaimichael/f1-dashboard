@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client/react";
 import { DriverStandingsTable } from "./components/DriverStandingsTable";
 import { LiveEventFeed } from "./components/LiveEventFeed";
+import { MessageBoard } from "./components/MessageBoard";
 import { GET_DRIVER_STANDINGS } from "./graphql/queries";
 import { useRaceEvents } from "./hooks/useRaceEvents";
 import type { DriverStandingsData } from "./types";
@@ -54,6 +55,8 @@ export function App() {
         <DriverStandingsTable standings={data?.driverStandings ?? []} loading={loading && !data} />
         <LiveEventFeed events={events} connectionState={connectionState} />
       </div>
+
+      <MessageBoard />
     </main>
   );
 }

@@ -6,6 +6,7 @@ const MAX_EVENTS = 24;
 
 export function useRaceEvents(url = EVENTS_URL) {
   const [events, setEvents] = useState<RaceEvent[]>([]);
+  
   const [connectionState, setConnectionState] =
     useState<ConnectionState>("connecting");
 

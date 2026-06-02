@@ -13,3 +13,25 @@ export const GET_DRIVER_STANDINGS = gql`
     }
   }
 `;
+
+export const GET_MESSAGES = gql`
+  query GetMessages {
+    messages {
+      id
+      author
+      text
+      createdAt
+    }
+  }
+`;
+
+export const ADD_MESSAGE = gql`
+  mutation AddMessage($input: MessageInput!) {
+    addMessage(input: $input) {
+      id
+      author
+      text
+      createdAt
+    }
+  }
+`;

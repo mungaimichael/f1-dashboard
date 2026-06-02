@@ -12,6 +12,13 @@ export type DriverStanding = {
   wins: number;
 };
 
+export type Message = {
+  id: string;
+  author: string;
+  text: string;
+  createdAt: string;
+};
+
 export type RaceEventType =
   | "OVERTAKE"
   | "FASTEST_LAP"

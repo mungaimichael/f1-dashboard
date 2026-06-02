@@ -29,3 +29,10 @@ export type RaceEvent = {
 };
 
 export type ConnectionState = "connecting" | "open" | "closed" | "error";
+
+export type Message = {
+  id: string;
+  author: string;
+  text: string;
+  createdAt: string;
+};
