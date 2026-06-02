@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import type { DriverStanding } from "./types.js";
+import type { DriverStanding, Race, Session } from "./types.js";
 
 const JOLPICA_BASE_URL =
   process.env.JOLPICA_BASE_URL ?? "https://api.jolpi.ca/ergast/f1";
@@ -10,6 +10,7 @@ const FETCH_TIMEOUT_MS = 5000;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CSV_PATH = path.resolve(__dirname, "../../drivers.csv");
+const RACES_CSV_PATH = path.resolve(__dirname, "../../races.csv");
 
 type JolpicaDriverStanding = {
   position: string;
@@ -34,6 +35,49 @@ type DriverStandingsResponse = {
       StandingsLists: Array<{
         DriverStandings: JolpicaDriverStanding[];
       }>;
+    };
+  };
+};
+
+type JolpicaLocation = {
+  lat: string;
+  long: string;
+  locality: string;
+  country: string;
+};
+
+type JolpicaCircuit = {
+  circuitId: string;
+  url: string;
+  circuitName: string;
+  Location: JolpicaLocation;
+};
+
+type JolpicaSession = {
+  date: string;
+  time: string;
+};
+
+type JolpicaRace = {
+  season: string;
+  round: string;
+  url: string;
+  raceName: string;
+  date: string;
+  time?: string;
+  Circuit: JolpicaCircuit;
+  FirstPractice?: JolpicaSession;
+  SecondPractice?: JolpicaSession;
+  ThirdPractice?: JolpicaSession;
+  Qualifying?: JolpicaSession;
+  Sprint?: JolpicaSession;
+};
+
+type RacesResponse = {
+  MRData: {
+    RaceTable: {
+      season: string;
+      Races: JolpicaRace[];
     };
   };
 };
@@ -114,5 +158,121 @@ export async function getDriverStandings(): Promise<DriverStanding[]> {
   } catch (error) {
     console.warn("Jolpica API unavailable, falling back to CSV data:", error);
     return loadDriversFromCsv();
+  }
+}
+
+function parseCsvLine(line: string): string[] {
+  const fields: string[] = [];
+  let i = 0;
+
+  while (i < line.length) {
+    if (line[i] === '"') {
+      i++;
+      let field = "";
+      while (i < line.length) {
+        if (line[i] === '"' && line[i + 1] === '"') {
+          field += '"';
+          i += 2;
+        } else if (line[i] === '"') {
+          i++;
+          break;
+        } else {
+          field += line[i++];
+        }
+      }
+      if (i < line.length && line[i] === ",") i++;
+      fields.push(field);
+    } else {
+      const end = line.indexOf(",", i);
+      if (end === -1) {
+        fields.push(line.slice(i));
+        break;
+      }
+      fields.push(line.slice(i, end));
+      i = end + 1;
+    }
+  }
+
+  return fields;
+}
+
+function loadRacesFromCsv(): Race[] {
+  const text = readFileSync(RACES_CSV_PATH, "utf-8");
+  const [, ...rows] = text.trim().split("\n");
+
+  return rows.map((line) => {
+    const [
+      round, season, raceName, circuitId, circuitName,
+      locality, country, lat, lng, date, time, isSprint, sessions
+    ] = parseCsvLine(line);
+
+    return {
+      round: Number(round),
+      season,
+      raceName,
+      circuitId,
+      circuitName,
+      locality,
+      country,
+      lat: lat ? Number(lat) : null,
+      lng: lng ? Number(lng) : null,
+      date,
+      time: time || null,
+      isSprint: isSprint === "true",
+      sessions: JSON.parse(sessions) as Session[]
+    };
+  });
+}
+
+export async function getRaceCalendar(): Promise<Race[]> {
+  try {
+    const data = await fetchJson<RacesResponse>("/current/races.json");
+
+    const races = data.MRData.RaceTable.Races;
+
+    return races.map((race) => {
+      const loc = race.Circuit.Location;
+      const lat = loc.lat ? Number(loc.lat) : null;
+      const lng = loc.long ? Number(loc.long) : null;
+
+      const sessions: Session[] = [];
+
+      if (race.FirstPractice) {
+        sessions.push({ name: "Practice 1", date: race.FirstPractice.date, time: race.FirstPractice.time ?? null });
+      }
+      if (race.SecondPractice) {
+        sessions.push({ name: "Practice 2", date: race.SecondPractice.date, time: race.SecondPractice.time ?? null });
+      }
+      if (race.ThirdPractice) {
+        sessions.push({ name: "Practice 3", date: race.ThirdPractice.date, time: race.ThirdPractice.time ?? null });
+      }
+      if (race.Qualifying) {
+        sessions.push({ name: "Qualifying", date: race.Qualifying.date, time: race.Qualifying.time ?? null });
+      }
+      if (race.Sprint) {
+        sessions.push({ name: "Sprint", date: race.Sprint.date, time: race.Sprint.time ?? null });
+      }
+
+      sessions.push({ name: "Race", date: race.date, time: race.time ?? null });
+
+      return {
+        round: Number(race.round),
+        season: race.season,
+        raceName: race.raceName,
+        circuitId: race.Circuit.circuitId,
+        circuitName: race.Circuit.circuitName,
+        locality: loc.locality,
+        country: loc.country,
+        lat,
+        lng,
+        date: race.date,
+        time: race.time ?? null,
+        isSprint: race.Sprint !== undefined,
+        sessions
+      };
+    });
+  } catch (error) {
+    console.warn("Jolpica API unavailable, falling back to CSV race data:", error);
+    return loadRacesFromCsv();
   }
 }

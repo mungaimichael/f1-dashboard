@@ -36,3 +36,29 @@ export type Message = {
   text: string;
   createdAt: string;
 };
+
+export type Session = {
+  name: string;
+  date: string;
+  time: string | null;
+};
+
+export type Race = {
+  round: number;
+  season: string;
+  raceName: string;
+  circuitId: string;
+  circuitName: string;
+  locality: string;
+  country: string;
+  lat: number | null;
+  lng: number | null;
+  date: string;
+  time: string | null;
+  isSprint: boolean;
+  sessions: Session[];
+};
+
+export type RaceCalendarData = {
+  raceCalendar: Race[];
+};

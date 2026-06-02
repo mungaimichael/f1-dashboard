@@ -11,5 +11,8 @@
     "dev:server": "npm run dev -w server",
     "dev:web": "npm run dev -w web",
     "typecheck": "npm run typecheck -w server && npm run typecheck -w web"
+  },
+  "dependencies": {
+    "framer-motion": "^12.40.0"
   }
 }

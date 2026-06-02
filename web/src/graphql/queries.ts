@@ -14,6 +14,28 @@ export const GET_DRIVER_STANDINGS = gql`
   }
 `;
 
+export const GET_RACE_CALENDAR = gql`
+  query GetRaceCalendar {
+    raceCalendar {
+      round
+      season
+      raceName
+      circuitId
+      circuitName
+      locality
+      country
+      date
+      time
+      isSprint
+      sessions {
+        name
+        date
+        time
+      }
+    }
+  }
+`;
+
 export const GET_MESSAGES = gql`
   query GetMessages {
     messages {

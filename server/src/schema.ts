@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { createSchema } from "graphql-yoga";
 import { eventBus } from "./eventBus.js";
-import { getDriverStandings } from "./f1Api.js";
+import { getDriverStandings, getRaceCalendar } from "./f1Api.js";
 import type { Message } from "./types.js";
 
 const messages: Message[] = [];
@@ -36,6 +36,28 @@ export const schema = createSchema({
       wins: Int!
     }
 
+    type Session {
+      name: String!
+      date: String!
+      time: String
+    }
+
+    type Race {
+      round: Int!
+      season: String!
+      raceName: String!
+      circuitId: ID!
+      circuitName: String!
+      locality: String!
+      country: String!
+      lat: Float
+      lng: Float
+      date: String!
+      time: String
+      isSprint: Boolean!
+      sessions: [Session!]!
+    }
+
     type Message {
       id: ID!
       author: String!
@@ -51,6 +73,8 @@ export const schema = createSchema({
     type Query {
       "Current Formula 1 driver standings."
       driverStandings: [DriverStanding!]!
+      "Current season race calendar."
+      raceCalendar: [Race!]!
       "All messages posted to the message board."
       messages: [Message!]!
     }
@@ -63,6 +87,7 @@ export const schema = createSchema({
   resolvers: {
     Query: {
       driverStandings: () => getDriverStandings(),
+      raceCalendar: () => getRaceCalendar(),
       messages: () => messages
     },
     Mutation: {
