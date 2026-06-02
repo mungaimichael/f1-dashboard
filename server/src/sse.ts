@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
+import { eventBus } from "./eventBus.js";
 import { getDriverStandings } from "./f1Api.js";
-import type { DriverStanding, RaceEvent, RaceEventType } from "./types.js";
+import type { DriverStanding, Message, RaceEvent, RaceEventType } from "./types.js";
 
 const clients = new Set<Response>();
 const eventTypes: RaceEventType[] = [
@@ -119,8 +120,16 @@ export function eventsHandler(request: Request, response: Response): void {
   clients.add(response);
   response.write(": connected\n\n");
 
+  const onMessageAdded = (message: Message): void => {
+    response.write(`event: message-added\n`);
+    response.write(`data: ${JSON.stringify(message)}\n\n`);
+  };
+
+  eventBus.on("message-added", onMessageAdded);
+
   request.on("close", () => {
     clients.delete(response);
+    eventBus.off("message-added", onMessageAdded);
   });
 }
 

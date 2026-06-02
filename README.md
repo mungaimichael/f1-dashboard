@@ -11,7 +11,7 @@ web/
   Browser EventSource SSE client
 
 server/
-  Express
+  Express backend server
   GraphQL Yoga at /graphql
   SSE stream at /events
   Jolpica F1 API adapter

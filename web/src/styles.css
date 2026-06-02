@@ -545,259 +545,131 @@ tbody tr:last-child td {
 }
 
 /* ─────────────────────────────────────────────
-   Filter bar (Feature 1 — filter by event type)
+   Message board
    ───────────────────────────────────────────── */
-.filter-bar {
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 10px 20px;
-}
-
-.filter-btn {
-  background: var(--bg-raised);
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  color: var(--text-muted);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  min-height: 26px;
-  padding: 0 12px;
-  text-transform: uppercase;
-}
-
-.filter-btn:hover {
-  background: var(--bg-hover);
-  box-shadow: none;
-  transform: none;
-}
-
-.filter-btn[aria-pressed="true"] {
-  background: var(--accent-subtle);
-  border-color: var(--accent);
-  color: var(--accent-text);
-}
-
-/* ─────────────────────────────────────────────
-   Toast notification (Feature 2 — safety car)
-   ───────────────────────────────────────────── */
-.toast {
-  align-items: flex-start;
-  animation: toast-in 0.3s var(--ease-out);
-  background: var(--amber-subtle);
-  border: 1px solid var(--amber);
-  border-radius: var(--radius);
-  bottom: 28px;
-  box-shadow: 0 8px 32px oklch(0% 0 0 / 0.5);
-  display: flex;
-  gap: 12px;
-  left: 50%;
-  max-width: 420px;
-  padding: 14px 16px;
-  position: fixed;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  z-index: 100;
-}
-
-.toast-body {
-  display: grid;
-  flex: 1;
-  gap: 3px;
-}
-
-.toast-body strong {
-  color: var(--amber);
-  font-size: 0.86rem;
-  font-weight: 700;
-}
-
-.toast-body span {
-  color: var(--text-secondary);
-  font-size: 0.8rem;
-}
-
-.toast-close {
-  background: transparent;
-  border: 0;
-  color: var(--text-muted);
-  flex-shrink: 0;
-  font-size: 1rem;
-  line-height: 1;
-  min-height: auto;
-  padding: 0 2px;
-}
-
-.toast-close:hover {
-  background: transparent;
-  box-shadow: none;
-  color: var(--text-primary);
-  transform: none;
-}
-
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-/* ─────────────────────────────────────────────
-   Lap progress (Feature 3 — lap counter)
-   ───────────────────────────────────────────── */
-.lap-progress {
-  background: var(--bg-hover);
-  border-radius: 999px;
-  height: 4px;
-  margin-top: 8px;
-  overflow: hidden;
-  width: 100%;
-}
-
-.lap-progress-fill {
-  background: var(--accent);
-  border-radius: 999px;
-  height: 100%;
-  transition: width 1s var(--ease-out);
-}
-
-/* ─────────────────────────────────────────────
-   Reconnecting state (Feature 4)
-   ───────────────────────────────────────────── */
-.status-strip strong[data-reconnecting="true"] {
-  color: var(--amber);
-}
-
-/* ─────────────────────────────────────────────
-   Clickable driver rows (Feature 6)
-   ───────────────────────────────────────────── */
-.driver-row {
-  cursor: pointer;
-}
-
-/* ─────────────────────────────────────────────
-   Driver detail modal (Feature 6 — lazy query)
-   ───────────────────────────────────────────── */
-.modal-backdrop {
-  align-items: center;
-  animation: fade-in 0.15s ease;
-  background: oklch(0% 0 0 / 0.65);
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  left: 0;
-  padding: 20px;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 50;
-}
-
-.modal {
-  animation: modal-in 0.2s var(--ease-out);
+.message-board {
   background: var(--bg-surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  max-width: 440px;
+  margin-top: 16px;
   overflow: hidden;
-  width: 100%;
 }
 
-.modal-header {
-  align-items: center;
+.message-board .section-heading {
   border-bottom: 1px solid var(--border-subtle);
+}
+
+.message-list {
   display: flex;
-  justify-content: space-between;
-  padding: 18px 20px;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 20px;
+  scrollbar-color: var(--border) transparent;
+  scrollbar-width: thin;
 }
 
-.modal-header h2 {
-  font-size: 1rem;
-}
-
-.modal-close {
+.message-item {
+  animation: slide-in var(--duration) var(--ease-out);
   background: var(--bg-raised);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  min-height: 30px;
-  padding: 0 10px;
-}
-
-.modal-close:hover {
-  background: var(--bg-hover);
-  box-shadow: none;
-  transform: none;
-}
-
-.modal-body {
-  padding: 20px;
-}
-
-.modal-loading {
+  border-radius: var(--radius);
   display: grid;
-  gap: 10px;
+  gap: 4px;
+  padding: 10px 14px;
+  transition: border-color var(--duration) var(--ease-out);
 }
 
-.modal-dl {
-  display: grid;
-  gap: 0;
-  list-style: none;
-  padding: 0;
+.message-item:hover {
+  border-color: var(--border);
 }
 
-.modal-dl-row {
+.message-meta {
   align-items: center;
-  border-bottom: 1px solid var(--border-subtle);
   display: flex;
+  gap: 8px;
   justify-content: space-between;
-  padding: 11px 0;
 }
 
-.modal-dl-row:last-child {
-  border-bottom: 0;
-}
-
-.modal-dl-row dt {
-  color: var(--text-muted);
+.message-author {
+  color: var(--accent-text);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.modal-dl-row dd {
+.message-time {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.message-text {
   color: var(--text-primary);
   font-size: 0.88rem;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  line-height: 1.5;
   margin: 0;
 }
 
-.modal-empty {
+.message-empty {
+  align-items: center;
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius);
   color: var(--text-muted);
+  display: flex;
   font-size: 0.86rem;
-  margin: 0;
+  font-weight: 500;
+  justify-content: center;
+  list-style: none;
+  min-height: 100px;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+.message-compose {
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
 }
 
-@keyframes modal-in {
-  from {
-    opacity: 0;
-    transform: scale(0.97) translateY(8px);
+.message-input {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  flex: 0 0 160px;
+  font: inherit;
+  font-size: 0.86rem;
+  min-height: 38px;
+  outline: none;
+  padding: 0 12px;
+  transition:
+    border-color var(--duration) var(--ease-out),
+    box-shadow var(--duration) var(--ease-out);
+}
+
+.message-input--grow {
+  flex: 1 1 auto;
+}
+
+.message-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px oklch(62% 0.22 25 / 0.15);
+}
+
+.message-input::placeholder {
+  color: var(--text-muted);
+}
+
+@media (max-width: 560px) {
+  .message-compose {
+    flex-wrap: wrap;
   }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+
+  .message-input {
+    flex: 1 1 100%;
   }
 }
 
@@ -857,5 +729,493 @@ tbody tr:last-child td {
 
   .event-list {
     padding: 12px 14px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Next Race Countdown — Hero card
+   ───────────────────────────────────────────── */
+.next-race-card {
+  background:
+    linear-gradient(135deg, var(--bg-surface) 0%, oklch(14% 0.03 25) 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle radial glow behind the card */
+.next-race-card::before {
+  background: radial-gradient(
+    ellipse 60% 80% at 85% 50%,
+    oklch(40% 0.18 25 / 0.1) 0%,
+    transparent 70%
+  );
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.next-race-info {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  position: relative;
+}
+
+.next-race-eyebrow {
+  align-items: center;
+  color: var(--accent-text);
+  display: inline-flex;
+  font-size: 0.68rem;
+  font-weight: 700;
+  gap: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.next-race-eyebrow::before {
+  animation: pulse-accent 2s ease-in-out infinite;
+  background: var(--accent);
+  border-radius: 999px;
+  content: "";
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+}
+
+@keyframes pulse-accent {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+.next-race-name {
+  color: var(--text-primary);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.next-race-circuit {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.next-race-location {
+  align-items: center;
+  color: var(--text-muted);
+  display: flex;
+  font-size: 0.82rem;
+  font-weight: 500;
+  gap: 6px;
+}
+
+.next-race-flag {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* ─────────────────────────────────────────────
+   Countdown digits
+   ───────────────────────────────────────────── */
+.countdown {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  position: relative;
+}
+
+.countdown-digits {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.countdown-digit-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+
+.countdown-segment {
+  align-items: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: oklch(12% 0.015 250 / 0.65);
+  border: 1px solid oklch(30% 0.03 250 / 0.5);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 64px;
+  padding: 14px 12px 10px;
+}
+
+.countdown-value {
+  color: var(--text-primary);
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.countdown-label {
+  color: var(--text-muted);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.countdown-separator {
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 14px;
+  opacity: 0.5;
+}
+
+/* pulsing colon animation */
+.countdown-separator {
+  animation: blink-colon 1s steps(1) infinite;
+}
+
+@keyframes blink-colon {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 0; }
+}
+
+/* ─────────────────────────────────────────────
+   Race in progress indicator
+   ───────────────────────────────────────────── */
+.race-in-progress {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  position: relative;
+}
+
+.race-in-progress .dot {
+  animation: pulse-green 1.2s ease-in-out infinite;
+  background: var(--green);
+  height: 10px;
+  width: 10px;
+}
+
+.race-in-progress-text {
+  color: var(--green);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────
+   Sprint badge
+   ───────────────────────────────────────────── */
+.sprint-badge {
+  background: var(--amber-subtle);
+  border: 1px solid oklch(40% 0.1 84 / 0.5);
+  border-radius: 999px;
+  color: var(--amber);
+  display: inline-flex;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+/* ─────────────────────────────────────────────
+   Session schedule pills
+   ───────────────────────────────────────────── */
+.session-schedule {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  position: relative;
+  width: 100%;
+}
+
+.session-pill {
+  align-items: center;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  display: inline-flex;
+  font-size: 0.68rem;
+  font-weight: 600;
+  gap: 6px;
+  padding: 5px 10px;
+  transition: border-color var(--duration) var(--ease-out);
+}
+
+.session-pill:hover {
+  border-color: var(--border);
+}
+
+.session-pill-name {
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ─────────────────────────────────────────────
+   Next Race loading skeleton
+   ───────────────────────────────────────────── */
+.next-race-skeleton {
+  display: grid;
+  gap: 12px;
+  padding: 28px 32px;
+  width: 100%;
+}
+
+.next-race-skeleton .skeleton {
+  height: 1.2em;
+}
+
+.next-race-skeleton .skeleton:first-child {
+  width: 30%;
+}
+
+.next-race-skeleton .skeleton:nth-child(2) {
+  height: 2em;
+  width: 55%;
+}
+
+.next-race-skeleton .skeleton:nth-child(3) {
+  width: 40%;
+}
+
+/* ─────────────────────────────────────────────
+   Race Calendar — Full season timeline
+   ───────────────────────────────────────────── */
+.calendar-section {
+  margin-top: 16px;
+}
+
+.calendar-section .section-heading {
+  padding: 16px 4px 12px;
+}
+
+.calendar-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 4px 16px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.calendar-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.calendar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+/* ─────────────────────────────────────────────
+   Individual race cards
+   ───────────────────────────────────────────── */
+.race-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  display: grid;
+  flex-shrink: 0;
+  gap: 8px;
+  min-width: 172px;
+  padding: 16px;
+  scroll-snap-align: start;
+  transition:
+    border-color var(--duration) var(--ease-out),
+    transform var(--duration) var(--ease-out),
+    box-shadow var(--duration) var(--ease-out);
+}
+
+.race-card:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+
+/* Completed race — dimmed */
+.race-card--completed {
+  opacity: 0.5;
+}
+
+.race-card--completed:hover {
+  opacity: 0.75;
+}
+
+/* Next race — highlighted */
+.race-card--next {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px oklch(62% 0.22 25 / 0.15),
+    0 4px 24px oklch(62% 0.22 25 / 0.12);
+}
+
+.race-card--next:hover {
+  box-shadow:
+    0 0 0 1px oklch(62% 0.22 25 / 0.25),
+    0 6px 32px oklch(62% 0.22 25 / 0.18);
+}
+
+.race-card-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.race-card-round {
+  color: var(--text-muted);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.race-card-flag {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.race-card-name {
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.race-card-circuit {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.race-card-date {
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Skeleton race cards */
+.race-card-skeleton {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  display: grid;
+  flex-shrink: 0;
+  gap: 10px;
+  min-width: 172px;
+  padding: 16px;
+}
+
+.race-card-skeleton .skeleton {
+  height: 1em;
+}
+
+.race-card-skeleton .skeleton:first-child {
+  width: 35%;
+}
+
+.race-card-skeleton .skeleton:nth-child(2) {
+  font-size: 1.4rem;
+  width: 30%;
+}
+
+.race-card-skeleton .skeleton:nth-child(3) {
+  width: 80%;
+}
+
+.race-card-skeleton .skeleton:nth-child(4) {
+  width: 60%;
+}
+
+/* ─────────────────────────────────────────────
+   Responsive — new components
+   ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .next-race-card {
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .countdown {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .next-race-card {
+    padding: 20px 16px;
+  }
+
+  .countdown-segment {
+    min-width: 52px;
+    padding: 10px 8px 8px;
+  }
+
+  .countdown-value {
+    font-size: 1.2rem;
+  }
+
+  .countdown-separator {
+    font-size: 1rem;
+  }
+
+  .next-race-name {
+    font-size: 1.2rem;
+  }
+
+  .session-schedule {
+    gap: 4px;
+  }
+
+  .session-pill {
+    font-size: 0.62rem;
+    padding: 4px 8px;
+  }
+
+  .calendar-scroll {
+    gap: 8px;
+  }
+
+  .race-card {
+    min-width: 148px;
+    padding: 14px;
   }
 }

@@ -7,8 +7,9 @@ export const TOTAL_LAPS = 58;
 
 export function useRaceEvents(url = EVENTS_URL) {
   const [events, setEvents] = useState<RaceEvent[]>([]);
-  const [connectionState, setConnectionState] = useState<ConnectionState>("connecting");
+  const [totalReceived, setTotalReceived] = useState(0);
   const [currentLap, setCurrentLap] = useState(1);
+  const [connectionState, setConnectionState] = useState<ConnectionState>("connecting");
   const [reconnectAttempt, setReconnectAttempt] = useState(0);
 
   const sourceRef = useRef<EventSource | null>(null);
@@ -26,10 +27,14 @@ export function useRaceEvents(url = EVENTS_URL) {
         setConnectionState("open");
       });
 
-      source.addEventListener("race-event", (e: MessageEvent) => {
-        const payload = JSON.parse(e.data as string) as RaceEvent;
+      source.addEventListener("race-event", (event) => {
+        const payload = JSON.parse(event.data) as RaceEvent;
         setCurrentLap(payload.lap);
-        setEvents((prev) => [payload, ...prev.slice(0, MAX_EVENTS - 1)]);
+        setTotalReceived((n) => n + 1);
+        setEvents((currentEvents) => [
+          payload,
+          ...currentEvents.slice(0, MAX_EVENTS - 1)
+        ]);
       });
 
       source.addEventListener("error", () => {
@@ -56,5 +61,12 @@ export function useRaceEvents(url = EVENTS_URL) {
     };
   }, [url]);
 
-  return { events, connectionState, currentLap, reconnectAttempt, totalLaps: TOTAL_LAPS };
+  return {
+    events,
+    totalReceived,
+    currentLap,
+    reconnectAttempt,
+    totalLaps: TOTAL_LAPS,
+    connectionState
+  };
 }

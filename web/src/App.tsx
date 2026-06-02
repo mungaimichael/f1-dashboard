@@ -3,18 +3,26 @@ import { useState } from "react";
 import { DriverModal } from "./components/DriverModal";
 import { DriverStandingsTable } from "./components/DriverStandingsTable";
 import { LiveEventFeed } from "./components/LiveEventFeed";
+import { MessageBoard } from "./components/MessageBoard";
+import { NextRaceCountdown } from "./components/NextRaceCountdown";
+import { RaceCalendar } from "./components/RaceCalendar";
 import { Toast } from "./components/Toast";
-import { GET_DRIVER_STANDINGS } from "./graphql/queries";
+import { GET_DRIVER_STANDINGS, GET_RACE_CALENDAR } from "./graphql/queries";
 import { useRaceEvents } from "./hooks/useRaceEvents";
 import { useToast } from "./hooks/useToast";
-import type { DriverStandingsData } from "./types";
+import type { DriverStandingsData, RaceCalendarData } from "./types";
 
 export function App() {
   const { data, loading, error, refetch } = useQuery<DriverStandingsData>(
     GET_DRIVER_STANDINGS,
     { fetchPolicy: "cache-and-network" }
   );
-  const { events, connectionState, currentLap, reconnectAttempt, totalLaps } = useRaceEvents();
+  const { data: calendarData, loading: calendarLoading } =
+    useQuery<RaceCalendarData>(GET_RACE_CALENDAR, {
+      fetchPolicy: "cache-and-network"
+    });
+  const { events, totalReceived, connectionState, currentLap, totalLaps, reconnectAttempt } =
+    useRaceEvents();
   const { toast, dismiss } = useToast(events);
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
 
@@ -24,6 +32,9 @@ export function App() {
       ? `Reconnecting (${reconnectAttempt})`
       : connectionState;
 
+  const now = new Date().toISOString().slice(0, 10);
+  const nextRace = calendarData?.raceCalendar.find((r) => r.date >= now) ?? null;
+
   return (
     <main className="app-shell">
       <header className="masthead">
@@ -31,7 +42,11 @@ export function App() {
           <p className="eyebrow">F1 Telemetry</p>
           <h1>Live standings &amp; race events</h1>
         </div>
-        <button type="button" id="refresh-standings-btn" onClick={() => void refetch()}>
+        <button
+          type="button"
+          id="refresh-standings-btn"
+          onClick={() => void refetch()}
+        >
           ↺ Refresh
         </button>
       </header>
@@ -47,7 +62,7 @@ export function App() {
         </div>
         <div>
           <span>Events</span>
-          <strong>{events.length}</strong>
+          <strong>{totalReceived}</strong>
         </div>
         <div>
           <span>Lap</span>
@@ -68,6 +83,11 @@ export function App() {
         </div>
       </section>
 
+      <NextRaceCountdown
+        race={nextRace}
+        loading={calendarLoading && !calendarData}
+      />
+
       {error ? (
         <section className="error-panel" role="alert">
           <strong>Could not load driver standings.</strong>
@@ -83,6 +103,13 @@ export function App() {
         />
         <LiveEventFeed events={events} connectionState={connectionState} />
       </div>
+
+      <RaceCalendar
+        races={calendarData?.raceCalendar ?? []}
+        loading={calendarLoading && !calendarData}
+      />
+
+      <MessageBoard />
 
       {toast ? <Toast event={toast} onDismiss={dismiss} /> : null}
 

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:5174)",
+      "Bash(node -e ' *)",
+      "PowerShell(npx playwright --version 2>&1)",
+      "PowerShell(node \"C:\\\\tmp\\\\verify-features.cjs\")"
+    ],
+    "additionalDirectories": [
+      "C:\\tmp"
+    ]
+  }
+}

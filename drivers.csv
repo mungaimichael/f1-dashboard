@@ -1,0 +1,11 @@
+id,position,code,name,team,points,wins
+norris,1,NOR,Lando Norris,McLaren,189,4
+piastri,2,PIA,Oscar Piastri,McLaren,165,3
+verstappen,3,VER,Max Verstappen,Red Bull,152,3
+russell,4,RUS,George Russell,Mercedes,130,2
+hamilton,5,HAM,Lewis Hamilton,Ferrari,118,1
+leclerc,6,LEC,Charles Leclerc,Ferrari,107,1
+sainz,7,SAI,Carlos Sainz,Williams,89,0
+alonso,8,ALO,Fernando Alonso,Aston Martin,62,0
+antonelli,9,ANT,Kimi Antonelli,Mercedes,54,0
+hulkenberg,10,HUL,Nico Hulkenberg,Sauber,42,0
