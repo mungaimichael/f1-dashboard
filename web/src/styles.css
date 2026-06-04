@@ -14,10 +14,10 @@
   --text-secondary: oklch(75% 0.01 260);
   --text-muted:     oklch(55% 0.01 260);
 
-  --accent:         oklch(60% 0.22 25); /* F1 Racing Red */
-  --accent-hover:   oklch(55% 0.22 25);
-  --accent-subtle:  oklch(25% 0.1 25 / 0.3);
-  --accent-text:    oklch(70% 0.18 25);
+  --accent:         oklch(65% 0.12 45); /* Earthy Terracotta */
+  --accent-hover:   oklch(60% 0.12 45);
+  --accent-subtle:  oklch(30% 0.05 45 / 0.4);
+  --accent-text:    oklch(75% 0.10 45);
 
   --green:          oklch(75% 0.18 150);
   --green-subtle:   oklch(25% 0.08 150 / 0.3);
@@ -42,10 +42,10 @@
     --text-secondary: oklch(35% 0.01 260);
     --text-muted:     oklch(55% 0.01 260);
 
-    --accent:         oklch(55% 0.22 25);
-    --accent-hover:   oklch(50% 0.22 25);
-    --accent-subtle:  oklch(55% 0.22 25 / 0.12);
-    --accent-text:    oklch(45% 0.18 25);
+    --accent:         oklch(55% 0.12 45);
+    --accent-hover:   oklch(50% 0.12 45);
+    --accent-subtle:  oklch(90% 0.04 45);
+    --accent-text:    oklch(45% 0.12 45);
 
     --green:          oklch(55% 0.15 150);
     --green-subtle:   oklch(55% 0.15 150 / 0.12);
@@ -102,7 +102,6 @@
   top: 3px;
   left: 3px;
   z-index: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 :root {
@@ -230,14 +229,13 @@ button {
   padding: 0 16px;
   transition:
     background var(--duration) var(--ease-out),
-    transform var(--duration) var(--ease-out),
-    box-shadow var(--duration) var(--ease-out);
+    background var(--duration) var(--ease-out),
+    transform var(--duration) var(--ease-out);
   white-space: nowrap;
 }
 
 button:hover {
   background: var(--accent-hover);
-  box-shadow: 0 0 15px oklch(60% 0.25 25 / 0.4), 0 0 0 4px oklch(60% 0.25 25 / 0.18);
   transform: translateY(-2px);
 }
 
@@ -262,7 +260,6 @@ button:active {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -312,7 +309,6 @@ button:active {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 
@@ -517,13 +513,11 @@ tbody tr:last-child td {
   padding: 6px 12px;
   font-weight: 600;
   min-height: auto;
-  box-shadow: none;
   transition: all var(--duration) var(--ease-out);
 }
 .filter-btn:hover {
   background: var(--bg-raised);
   border-color: var(--text-muted);
-  box-shadow: none;
   transform: none;
   color: var(--text-primary);
 }
@@ -684,7 +678,6 @@ tbody tr:last-child td {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   margin-top: 16px;
   overflow: hidden;
 }
@@ -780,8 +773,7 @@ tbody tr:last-child td {
   outline: none;
   padding: 0 12px;
   transition:
-    border-color var(--duration) var(--ease-out),
-    box-shadow var(--duration) var(--ease-out);
+    border-color var(--duration) var(--ease-out);
 }
 
 .message-input--grow {
@@ -790,7 +782,6 @@ tbody tr:last-child td {
 
 .message-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px oklch(62% 0.22 25 / 0.15);
 }
 
 .message-input::placeholder {
@@ -876,7 +867,6 @@ tbody tr:last-child td {
     linear-gradient(135deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-wrap: wrap;
   gap: 28px;
@@ -1182,7 +1172,6 @@ tbody tr:last-child td {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   display: grid;
   flex-shrink: 0;
   gap: 8px;
@@ -1191,8 +1180,7 @@ tbody tr:last-child td {
   scroll-snap-align: start;
   transition:
     border-color var(--duration) var(--ease-out),
-    transform var(--duration) var(--ease-out),
-    box-shadow var(--duration) var(--ease-out);
+    transform var(--duration) var(--ease-out);
 }
 
 .race-card:hover {
@@ -1212,15 +1200,10 @@ tbody tr:last-child td {
 /* Next race — highlighted */
 .race-card--next {
   border-color: var(--accent);
-  box-shadow:
-    0 0 0 1px oklch(62% 0.22 25 / 0.15),
-    0 4px 24px oklch(62% 0.22 25 / 0.12);
 }
 
 .race-card--next:hover {
-  box-shadow:
-    0 0 0 1px oklch(62% 0.22 25 / 0.25),
-    0 6px 32px oklch(62% 0.22 25 / 0.18);
+  border-color: var(--accent-hover);
 }
 
 .race-card-header {

@@ -60,10 +60,7 @@ export function App() {
             onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
             aria-label="Toggle theme"
           >
-            <span className="theme-icon">
-              <span>☀️</span>
-              <span>🌙</span>
-            </span>
+            <span className="theme-icon"></span>
             <motion.div 
               className="theme-toggle-knob"
               animate={{ x: theme === 'light' ? 28 : 0 }}
@@ -75,7 +72,7 @@ export function App() {
             id="refresh-standings-btn"
             onClick={() => void refetch()}
           >
-            ↺ Refresh
+            Refresh
           </button>
         </div>
       </header>
