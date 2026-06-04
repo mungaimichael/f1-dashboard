@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ADD_MESSAGE, GET_MESSAGES } from "../graphql/queries";
 import { useMessageEvents } from "../hooks/useMessageEvents";
 import type { Message } from "../types";
@@ -92,21 +93,46 @@ export function MessageBoard() {
         aria-live="polite"
         aria-label="Chat messages"
       >
-        {allMessages.length === 0 ? (
-          <li className="message-empty">No messages yet — be the first!</li>
-        ) : (
-          allMessages.map((msg) => (
-            <li key={msg.id} className="message-item">
-              <div className="message-meta">
-                <strong className="message-author">{msg.author}</strong>
-                <time className="message-time" dateTime={msg.createdAt}>
-                  {new Date(msg.createdAt).toLocaleTimeString()}
-                </time>
-              </div>
-              <p className="message-text">{msg.text}</p>
-            </li>
-          ))
-        )}
+        <AnimatePresence initial={false}>
+          {allMessages.length === 0 ? (
+            <motion.li 
+              key="empty"
+              className="message-empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              No messages yet — be the first!
+            </motion.li>
+          ) : (
+            allMessages.map((msg, index) => {
+              const distance = allMessages.length - 1 - index;
+              return (
+                <motion.li 
+                  key={msg.id} 
+                  className="message-item"
+                  layout
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ 
+                    opacity: Math.max(0.5, 1 - distance * 0.06), 
+                    y: 0, 
+                    scale: 1 
+                  }}
+                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                >
+                  <div className="message-meta">
+                    <strong className="message-author">{msg.author}</strong>
+                    <time className="message-time" dateTime={msg.createdAt}>
+                      {new Date(msg.createdAt).toLocaleTimeString()}
+                    </time>
+                  </div>
+                  <p className="message-text">{msg.text}</p>
+                </motion.li>
+              );
+            })
+          )}
+        </AnimatePresence>
       </ol>
 
       
