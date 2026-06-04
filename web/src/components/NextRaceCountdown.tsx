@@ -97,7 +97,7 @@ export function NextRaceCountdown({ race, loading }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {getFlag(race.country)} {race.raceName}
+          {race.raceName}
         </motion.h2>
         <motion.p
           className="next-race-circuit"
@@ -123,7 +123,7 @@ export function NextRaceCountdown({ race, loading }: Props) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 20, delay: 0.3 }}
           >
-            ⚡ Sprint Weekend
+            Sprint Weekend
           </motion.span>
         )}
       </div>

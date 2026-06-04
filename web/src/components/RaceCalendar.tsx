@@ -1,6 +1,6 @@
 import { memo } from "react";
 import type { Race } from "../types";
-import { getFlag, formatDate } from "../utils";
+import { formatDate } from "../utils";
 
 type Props = {
   races: Race[];
@@ -27,16 +27,13 @@ const RaceCard = memo(function RaceCard({
   return (
     <article className={`race-card race-card--${status}`}>
       <span className="race-card-round">R{race.round}</span>
-      <span className="race-card-flag" aria-hidden="true">
-        {getFlag(race.country)}
-      </span>
       <h3 className="race-card-name" title={race.raceName}>
         {race.raceName}
       </h3>
       <p className="race-card-circuit">{race.circuitName}</p>
       <p className="race-card-date">{formatDate(race.date)}</p>
       {race.isSprint && (
-        <span className="sprint-badge sprint-badge--small">⚡ Sprint</span>
+        <span className="sprint-badge sprint-badge--small">Sprint</span>
       )}
     </article>
   );
