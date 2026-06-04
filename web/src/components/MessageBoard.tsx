@@ -1,12 +1,59 @@
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { ADD_MESSAGE, GET_MESSAGES } from "../graphql/queries";
 import { useMessageEvents } from "../hooks/useMessageEvents";
 import type { Message } from "../types";
 
 type MessagesData = { messages: Message[] };
 type AddMessageVars = { input: { author: string; text: string } };
+
+function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: number, onDismiss: (id: string) => void }) {
+  const x = useMotionValue(0);
+  const itemRef = useRef<HTMLLIElement>(null);
+  const [width, setWidth] = useState(300); // Sensible default
+
+  useEffect(() => {
+    if (itemRef.current) {
+      setWidth(itemRef.current.offsetWidth);
+    }
+  }, []);
+
+  const baseOpacity = Math.max(0.5, 1 - distance * 0.06);
+  
+  // Fade out to 0 as it approaches the edge (approx width / 1.5 to ensure it fades smoothly before popping)
+  const dragOpacity = useTransform(x, [-width / 1.5, 0, width / 1.5], [0, baseOpacity, 0]);
+
+  return (
+    <motion.li 
+      ref={itemRef}
+      layout
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.8}
+      style={{ x, opacity: dragOpacity }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: baseOpacity, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      onDragEnd={(_, info) => {
+        // Dismiss only if dragged at least a third of the container's width
+        if (Math.abs(info.offset.x) > width / 3) {
+          onDismiss(msg.id);
+        }
+      }}
+      className="message-item"
+    >
+      <div className="message-meta">
+        <strong className="message-author">{msg.author}</strong>
+        <time className="message-time" dateTime={msg.createdAt}>
+          {new Date(msg.createdAt).toLocaleTimeString()}
+        </time>
+      </div>
+      <p className="message-text">{msg.text}</p>
+    </motion.li>
+  );
+}
 
 export function MessageBoard() {
   const [author, setAuthor] = useState("");
@@ -23,9 +70,10 @@ export function MessageBoard() {
   >(ADD_MESSAGE);
 
   const { messages: liveMessages, connectionState } = useMessageEvents();
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
-  // Historical messages from query + live messages pushed via SSE
-  const allMessages = [...(data?.messages ?? []), ...liveMessages];
+  // Historical messages from query + live messages pushed via SSE, filtered by dismissed
+  const allMessages = [...(data?.messages ?? []), ...liveMessages].filter(msg => !dismissedIds.has(msg.id));
 
   useEffect(() => {
     if (listRef.current) {
@@ -108,27 +156,12 @@ export function MessageBoard() {
             allMessages.map((msg, index) => {
               const distance = allMessages.length - 1 - index;
               return (
-                <motion.li 
-                  key={msg.id} 
-                  className="message-item"
-                  layout
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ 
-                    opacity: Math.max(0.5, 1 - distance * 0.06), 
-                    y: 0, 
-                    scale: 1 
-                  }}
-                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  <div className="message-meta">
-                    <strong className="message-author">{msg.author}</strong>
-                    <time className="message-time" dateTime={msg.createdAt}>
-                      {new Date(msg.createdAt).toLocaleTimeString()}
-                    </time>
-                  </div>
-                  <p className="message-text">{msg.text}</p>
-                </motion.li>
+                <MessageItem 
+                  key={msg.id}
+                  msg={msg}
+                  distance={distance}
+                  onDismiss={(id) => setDismissedIds(prev => new Set(prev).add(id))}
+                />
               );
             })
           )}
