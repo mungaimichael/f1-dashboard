@@ -85,12 +85,11 @@ export function NextRaceCountdown({ race, loading }: Props) {
     <div className="next-race-card">
       <div className="next-race-info">
         <motion.p
-          className="eyebrow"
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
         >
-          Next Race <span className="eyebrow-sub">ROUND {race.round}</span>
+          Next Race ROUND {race.round}
         </motion.p>
         <motion.h2
           className="next-race-name"

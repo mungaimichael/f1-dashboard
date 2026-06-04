@@ -39,7 +39,7 @@ export function App() {
     <main className="app-shell">
       <header className="masthead">
         <div>
-          <p className="eyebrow">F1 Telemetry</p>
+          <p>F1 Telemetry</p>
           <h1>Live standings &amp; race events</h1>
         </div>
         <button

@@ -1,4 +1,5 @@
 import { memo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { ConnectionState, RaceEvent, RaceEventType } from "../types";
 
 type Props = {
@@ -24,7 +25,14 @@ const eventTypeClass: Record<RaceEventType, string> = {
 
 const RaceEventItem = memo(function RaceEventItem({ event }: { event: RaceEvent }) {
   return (
-    <li className="event-item">
+    <motion.li
+      layout
+      initial={{ opacity: 0, y: -20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="event-item"
+    >
       <div>
         <span className={`event-type ${eventTypeClass[event.type]}`}>
           {eventLabels[event.type]}
@@ -32,7 +40,7 @@ const RaceEventItem = memo(function RaceEventItem({ event }: { event: RaceEvent 
         <strong>{event.message}</strong>
       </div>
       <span className="lap">Lap {event.lap}</span>
-    </li>
+    </motion.li>
   );
 });
 
@@ -85,9 +93,11 @@ export function LiveEventFeed({ events, connectionState }: Props) {
         </div>
       ) : (
         <ol className="event-list" aria-live="polite" aria-label="Live race events">
-          {visibleEvents.map((event) => (
-            <RaceEventItem key={event.id} event={event} />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {visibleEvents.map((event) => (
+              <RaceEventItem key={event.id} event={event} />
+            ))}
+          </AnimatePresence>
         </ol>
       )}
     </section>

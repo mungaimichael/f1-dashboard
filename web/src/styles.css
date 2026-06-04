@@ -3,39 +3,39 @@
    ───────────────────────────────────────────── */
 :root {
   /* Palette */
-  --bg:            oklch(9% 0.01 250);
-  --bg-surface:    oklch(13% 0.015 250);
-  --bg-raised:     oklch(17% 0.018 250);
-  --bg-hover:      oklch(21% 0.02 250);
-  --border:        oklch(28% 0.025 250);
-  --border-subtle: oklch(22% 0.02 250);
+  --bg:            oklch(12% 0.03 260);
+  --bg-surface:    oklch(18% 0.02 260 / 0.45);
+  --bg-raised:     oklch(24% 0.03 260 / 0.55);
+  --bg-hover:      oklch(30% 0.04 260 / 0.65);
+  --border:        oklch(40% 0.05 260 / 0.35);
+  --border-subtle: oklch(30% 0.03 260 / 0.25);
 
-  --text-primary:   oklch(96% 0.008 245);
-  --text-secondary: oklch(60% 0.03 245);
-  --text-muted:     oklch(42% 0.025 245);
+  --text-primary:   oklch(98% 0.01 245);
+  --text-secondary: oklch(75% 0.04 245);
+  --text-muted:     oklch(55% 0.03 245);
 
-  --accent:         oklch(62% 0.22 25);
-  --accent-hover:   oklch(56% 0.22 25);
-  --accent-subtle:  oklch(18% 0.06 25);
-  --accent-text:    oklch(78% 0.16 50);
+  --accent:         oklch(60% 0.25 25);
+  --accent-hover:   oklch(55% 0.25 25);
+  --accent-subtle:  oklch(30% 0.15 25 / 0.3);
+  --accent-text:    oklch(70% 0.2 25);
 
-  --green:          oklch(72% 0.18 148);
-  --green-subtle:   oklch(16% 0.06 148);
-  --amber:          oklch(76% 0.16 84);
-  --amber-subtle:   oklch(16% 0.06 84);
-  --red-subtle:     oklch(16% 0.06 25);
+  --green:          oklch(75% 0.2 160);
+  --green-subtle:   oklch(30% 0.1 160 / 0.3);
+  --amber:          oklch(80% 0.2 80);
+  --amber-subtle:   oklch(30% 0.1 80 / 0.3);
+  --red-subtle:     oklch(30% 0.15 25 / 0.3);
 
   /* Type */
-  --font-display:  "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-body:     "Nunito", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display:  "Outfit", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-body:     "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font:          var(--font-body);
-  --radius-sm: 6px;
-  --radius:    10px;
-  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 20px;
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration: 200ms;
+  --duration: 300ms;
 
   font-family: var(--font);
   font-synthesis: none;
@@ -57,7 +57,11 @@ h1, h2, h3, p, ul, ol {
 }
 
 body {
-  background: var(--bg);
+  background: 
+    radial-gradient(circle at 10% 20%, oklch(60% 0.25 25 / 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, oklch(70% 0.2 260 / 0.15) 0%, transparent 40%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--text-primary);
   min-width: 320px;
   min-height: 100dvh;
@@ -152,8 +156,8 @@ button {
 
 button:hover {
   background: var(--accent-hover);
-  box-shadow: 0 0 0 4px oklch(62% 0.22 25 / 0.18);
-  transform: translateY(-1px);
+  box-shadow: 0 0 15px oklch(60% 0.25 25 / 0.4), 0 0 0 4px oklch(60% 0.25 25 / 0.18);
+  transform: translateY(-2px);
 }
 
 button:active {
@@ -172,15 +176,18 @@ button:active {
 
 .status-strip > div {
   align-items: flex-start;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 2px;
   padding: 14px 18px;
   flex: 1 1 120px;
-  transition: border-color var(--duration) var(--ease-out);
+  transition: border-color var(--duration) var(--ease-out), transform var(--duration) var(--ease-out);
 }
 
 .status-strip > div:hover {
@@ -219,9 +226,12 @@ button:active {
 .standings-section,
 .feed-section,
 .error-panel {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 
@@ -406,6 +416,41 @@ tbody tr:last-child td {
 /* ─────────────────────────────────────────────
    Event feed
    ───────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar {
+  display: none;
+}
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  padding: 6px 12px;
+  font-weight: 600;
+  min-height: auto;
+  box-shadow: none;
+  transition: all var(--duration) var(--ease-out);
+}
+.filter-btn:hover {
+  background: var(--bg-raised);
+  border-color: var(--text-muted);
+  box-shadow: none;
+  transform: none;
+  color: var(--text-primary);
+}
+.filter-btn[aria-pressed="true"] {
+  background: var(--text-primary);
+  color: var(--bg);
+  border-color: var(--text-primary);
+}
 .event-list {
   display: grid;
   gap: 8px;
@@ -420,7 +465,6 @@ tbody tr:last-child td {
 
 .event-item {
   align-items: flex-start;
-  animation: slide-in var(--duration) var(--ease-out);
   background: var(--bg-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
@@ -554,9 +598,12 @@ tbody tr:last-child td {
    Message board
    ───────────────────────────────────────────── */
 .message-board {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   margin-top: 16px;
   overflow: hidden;
 }
@@ -742,10 +789,13 @@ tbody tr:last-child td {
    Next Race Countdown — Hero card
    ───────────────────────────────────────────── */
 .next-race-card {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   background:
-    linear-gradient(135deg, var(--bg-surface) 0%, oklch(14% 0.03 25) 100%);
-  border: 1px solid var(--border-subtle);
+    linear-gradient(135deg, oklch(25% 0.05 260 / 0.45) 0%, oklch(14% 0.03 260 / 0.6) 100%);
+  border: 1px solid oklch(100% 0 0 / 0.1);
   border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-wrap: wrap;
   gap: 28px;
@@ -1046,9 +1096,12 @@ tbody tr:last-child td {
    Individual race cards
    ───────────────────────────────────────────── */
 .race-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   display: grid;
   flex-shrink: 0;
   gap: 8px;
