@@ -2,28 +2,110 @@
    Design tokens
    ───────────────────────────────────────────── */
 :root {
-  /* Palette */
-  --bg:            oklch(12% 0.03 260);
-  --bg-surface:    oklch(18% 0.02 260 / 0.45);
-  --bg-raised:     oklch(24% 0.03 260 / 0.55);
-  --bg-hover:      oklch(30% 0.04 260 / 0.65);
-  --border:        oklch(40% 0.05 260 / 0.35);
-  --border-subtle: oklch(30% 0.03 260 / 0.25);
+  /* Palette - Sleek Carbon Dark Mode */
+  --bg:            oklch(10% 0.005 260);
+  --bg-surface:    oklch(15% 0.005 260 / 0.5);
+  --bg-raised:     oklch(20% 0.005 260 / 0.6);
+  --bg-hover:      oklch(25% 0.005 260 / 0.7);
+  --border:        oklch(35% 0.005 260 / 0.4);
+  --border-subtle: oklch(25% 0.005 260 / 0.3);
 
-  --text-primary:   oklch(98% 0.01 245);
-  --text-secondary: oklch(75% 0.04 245);
-  --text-muted:     oklch(55% 0.03 245);
+  --text-primary:   oklch(98% 0.005 260);
+  --text-secondary: oklch(75% 0.01 260);
+  --text-muted:     oklch(55% 0.01 260);
 
-  --accent:         oklch(60% 0.25 25);
-  --accent-hover:   oklch(55% 0.25 25);
-  --accent-subtle:  oklch(30% 0.15 25 / 0.3);
-  --accent-text:    oklch(70% 0.2 25);
+  --accent:         oklch(60% 0.22 25); /* F1 Racing Red */
+  --accent-hover:   oklch(55% 0.22 25);
+  --accent-subtle:  oklch(25% 0.1 25 / 0.3);
+  --accent-text:    oklch(70% 0.18 25);
 
-  --green:          oklch(75% 0.2 160);
-  --green-subtle:   oklch(30% 0.1 160 / 0.3);
-  --amber:          oklch(80% 0.2 80);
-  --amber-subtle:   oklch(30% 0.1 80 / 0.3);
-  --red-subtle:     oklch(30% 0.15 25 / 0.3);
+  --green:          oklch(75% 0.18 150);
+  --green-subtle:   oklch(25% 0.08 150 / 0.3);
+  --amber:          oklch(80% 0.18 80);
+  --amber-subtle:   oklch(25% 0.08 80 / 0.3);
+  --red-subtle:     oklch(25% 0.1 25 / 0.3);
+
+  --bg-spotlight:   oklch(20% 0.01 260);
+  --hero-bg-start:  oklch(20% 0.01 260 / 0.6);
+  --hero-bg-end:    oklch(12% 0.01 260 / 0.8);
+}
+
+[data-theme="light"] {
+    --bg:            oklch(98% 0.002 260);
+    --bg-surface:    oklch(100% 0.005 260 / 0.65);
+    --bg-raised:     oklch(95% 0.005 260 / 0.7);
+    --bg-hover:      oklch(92% 0.005 260 / 0.8);
+    --border:        oklch(85% 0.005 260 / 0.8);
+    --border-subtle: oklch(90% 0.005 260 / 0.6);
+
+    --text-primary:   oklch(15% 0.01 260);
+    --text-secondary: oklch(35% 0.01 260);
+    --text-muted:     oklch(55% 0.01 260);
+
+    --accent:         oklch(55% 0.22 25);
+    --accent-hover:   oklch(50% 0.22 25);
+    --accent-subtle:  oklch(55% 0.22 25 / 0.12);
+    --accent-text:    oklch(45% 0.18 25);
+
+    --green:          oklch(55% 0.15 150);
+    --green-subtle:   oklch(55% 0.15 150 / 0.12);
+    --amber:          oklch(60% 0.16 80);
+    --amber-subtle:   oklch(65% 0.18 80 / 0.12);
+    --red-subtle:     oklch(55% 0.22 25 / 0.12);
+
+    --bg-spotlight:   oklch(100% 0.01 260 / 0.8);
+    --hero-bg-start:  oklch(100% 0.01 260 / 0.7);
+    --hero-bg-end:    oklch(95% 0.01 260 / 0.9);
+
+  color-scheme: light;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  position: relative;
+  width: 60px;
+  height: 32px;
+  min-height: 32px;
+  transition: border-color var(--duration) var(--ease-out);
+}
+
+.theme-toggle:hover {
+  background: var(--bg-surface);
+  border-color: var(--accent);
+  box-shadow: none;
+  transform: none;
+}
+
+.theme-icon {
+  font-size: 0.9rem;
+  z-index: 1;
+  pointer-events: none;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.theme-toggle-knob {
+  background: var(--text-primary);
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  z-index: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+:root {
 
   /* Type */
   --font-display:  "Outfit", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -58,8 +140,7 @@ h1, h2, h3, p, ul, ol {
 
 body {
   background: 
-    radial-gradient(circle at 10% 20%, oklch(60% 0.25 25 / 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, oklch(70% 0.2 260 / 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 50% 0%, var(--bg-spotlight) 0%, transparent 60%),
     var(--bg);
   background-attachment: fixed;
   color: var(--text-primary);
@@ -447,9 +528,9 @@ tbody tr:last-child td {
   color: var(--text-primary);
 }
 .filter-btn[aria-pressed="true"] {
-  background: var(--text-primary);
-  color: var(--bg);
-  border-color: var(--text-primary);
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 .event-list {
   display: grid;
@@ -792,8 +873,8 @@ tbody tr:last-child td {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   background:
-    linear-gradient(135deg, oklch(25% 0.05 260 / 0.45) 0%, oklch(14% 0.03 260 / 0.6) 100%);
-  border: 1px solid oklch(100% 0 0 / 0.1);
+    linear-gradient(135deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   display: flex;
@@ -906,8 +987,8 @@ tbody tr:last-child td {
   align-items: center;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background: oklch(12% 0.015 250 / 0.65);
-  border: 1px solid oklch(30% 0.03 250 / 0.5);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   display: flex;
   flex-direction: column;
@@ -982,7 +1063,7 @@ tbody tr:last-child td {
    ───────────────────────────────────────────── */
 .sprint-badge {
   background: var(--amber-subtle);
-  border: 1px solid oklch(40% 0.1 84 / 0.5);
+  border: 1px solid var(--amber);
   border-radius: 999px;
   color: var(--amber);
   display: inline-flex;

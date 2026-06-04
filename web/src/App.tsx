@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { DriverModal } from "./components/DriverModal";
 import { DriverStandingsTable } from "./components/DriverStandingsTable";
 import { LiveEventFeed } from "./components/LiveEventFeed";
@@ -26,6 +27,16 @@ export function App() {
   const { toast, dismiss } = useToast(events);
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
 
+  const [theme, setTheme] = useState<"light" | "dark">(
+    () => (localStorage.getItem("f1-theme") as "light" | "dark") || 
+          (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("f1-theme", theme);
+  }, [theme]);
+
   const graphqlStatus = loading ? "Loading…" : error ? "Error" : "Ready";
   const sseLabel =
     connectionState === "reconnecting"
@@ -42,13 +53,31 @@ export function App() {
           <p>F1 Telemetry</p>
           <h1>Live standings &amp; race events</h1>
         </div>
-        <button
-          type="button"
-          id="refresh-standings-btn"
-          onClick={() => void refetch()}
-        >
-          ↺ Refresh
-        </button>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
+            aria-label="Toggle theme"
+          >
+            <span className="theme-icon">
+              <span>☀️</span>
+              <span>🌙</span>
+            </span>
+            <motion.div 
+              className="theme-toggle-knob"
+              animate={{ x: theme === 'light' ? 28 : 0 }}
+              transition={{ type: "spring", stiffness: 600, damping: 30 }}
+            />
+          </button>
+          <button
+            type="button"
+            id="refresh-standings-btn"
+            onClick={() => void refetch()}
+          >
+            ↺ Refresh
+          </button>
+        </div>
       </header>
 
       <section className="status-strip" aria-label="Connection status">
