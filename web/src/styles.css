@@ -10,7 +10,8 @@
   --border:        oklch(35% 0.005 260 / 0.4);
   --border-subtle: oklch(25% 0.005 260 / 0.3);
 
-  --text-primary:   oklch(98% 0.005 260);
+  /* Dark mode text: Off-white with a subtle icy blue/purple tint */
+  --text-primary:   oklch(95% 0.015 260);
   --text-secondary: oklch(75% 0.01 260);
   --text-muted:     oklch(55% 0.01 260);
 
@@ -38,7 +39,8 @@
     --border:        oklch(85% 0.005 260 / 0.8);
     --border-subtle: oklch(90% 0.005 260 / 0.6);
 
-    --text-primary:   oklch(15% 0.01 260);
+    /* Light mode text: Deep navy/slate instead of pure black */
+    --text-primary:   oklch(18% 0.03 260);
     --text-secondary: oklch(35% 0.01 260);
     --text-muted:     oklch(55% 0.01 260);
 
@@ -58,6 +60,18 @@
     --hero-bg-end:    oklch(95% 0.01 260 / 0.9);
 
   color-scheme: light;
+}
+
+/* Global Theme Transition */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.8s var(--ease-out), 
+              border-color 0.8s var(--ease-out), 
+              color 0.8s var(--ease-out), 
+              fill 0.8s var(--ease-out), 
+              stroke 0.8s var(--ease-out) !important;
 }
 
 /* Theme Toggle */
@@ -167,6 +181,14 @@ body {
   margin-bottom: 28px;
 }
 
+@media (max-width: 560px) {
+  .masthead {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
 .eyebrow {
   align-items: center;
   color: var(--accent-text);
@@ -195,7 +217,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
   color: var(--text-primary);
   font-size: clamp(1.7rem, 4vw, 3.2rem);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.05;
   max-width: 680px;

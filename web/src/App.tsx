@@ -33,8 +33,15 @@ export function App() {
   );
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("f1-theme", theme);
+    document.documentElement.classList.add('theme-transition');
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('f1-theme', theme);
+
+    const timeout = setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition');
+    }, 800);
+
+    return () => clearTimeout(timeout);
   }, [theme]);
 
   const graphqlStatus = loading ? "Loading…" : error ? "Error" : "Ready";
