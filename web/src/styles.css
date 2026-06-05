@@ -9,6 +9,8 @@
   --bg-hover:      oklch(25% 0.005 260 / 0.7);
   --border:        oklch(35% 0.005 260 / 0.4);
   --border-subtle: oklch(25% 0.005 260 / 0.3);
+  --overlay-bg:    oklch(0% 0 0 / 0.6);
+  --shadow-ambient: oklch(0% 0 0 / 0.4);
 
   /* Dark mode text: Off-white with a subtle icy blue/purple tint */
   --text-primary:   oklch(95% 0.015 260);
@@ -38,6 +40,8 @@
     --bg-hover:      oklch(92% 0.005 260 / 0.8);
     --border:        oklch(85% 0.005 260 / 0.8);
     --border-subtle: oklch(90% 0.005 260 / 0.6);
+    --overlay-bg:    oklch(15% 0.02 260 / 0.15);
+    --shadow-ambient: oklch(15% 0.02 260 / 0.1);
 
     /* Light mode text: Deep navy/slate instead of pure black */
     --text-primary:   oklch(18% 0.03 260);
@@ -762,9 +766,9 @@ tbody tr:last-child td {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: var(--overlay-bg);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -774,8 +778,11 @@ tbody tr:last-child td {
 
 .modal {
   background: var(--bg-surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius);
+  border-radius: calc(var(--radius) * 1.5);
+  box-shadow: 0 32px 64px var(--shadow-ambient);
   width: 100%;
   max-width: 480px;
   display: flex;
@@ -793,9 +800,7 @@ tbody tr:last-child td {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-raised);
+  padding: 24px 28px 20px;
 }
 
 .modal-header h2 {
@@ -810,10 +815,12 @@ tbody tr:last-child td {
   color: var(--text-muted);
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   line-height: 1;
   border-radius: var(--radius-sm);
   transition: color 0.2s, background 0.2s;
+  margin-right: -6px;
+  margin-top: -6px;
 }
 
 .modal-close:hover {
@@ -822,7 +829,7 @@ tbody tr:last-child td {
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 0 28px 28px;
   overflow-y: auto;
   max-height: 70vh;
 }
@@ -838,7 +845,7 @@ tbody tr:last-child td {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px dashed var(--border-subtle);
   padding-bottom: 12px;
 }
 
