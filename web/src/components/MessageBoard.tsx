@@ -12,6 +12,7 @@ function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: num
   const x = useMotionValue(0);
   const itemRef = useRef<HTMLLIElement>(null);
   const [width, setWidth] = useState(300); // Sensible default
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (itemRef.current) {
@@ -36,6 +37,9 @@ function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: num
       animate={{ opacity: baseOpacity, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      onDragStart={() => setIsHovered(false)}
       onDragEnd={(_, info) => {
         // Dismiss only if dragged at least a third of the container's width
         if (Math.abs(info.offset.x) > width / 3) {
@@ -51,6 +55,20 @@ function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: num
         </time>
       </div>
       <p className="message-text">{msg.text}</p>
+
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            className="drag-tooltip"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            Drag to remove
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.li>
   );
 }
@@ -141,7 +159,7 @@ export function MessageBoard() {
         aria-live="polite"
         aria-label="Chat messages"
       >
-        <AnimatePresence initial={false}>
+        <AnimatePresence mode="popLayout" initial={false}>
           {allMessages.length === 0 ? (
             <motion.li 
               key="empty"

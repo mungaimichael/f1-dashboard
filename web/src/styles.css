@@ -730,10 +730,30 @@ tbody tr:last-child td {
   gap: 4px;
   padding: 10px 14px;
   transition: border-color var(--duration) var(--ease-out);
+  position: relative;
 }
 
 .message-item:hover {
   border-color: var(--border);
+}
+
+.drag-tooltip {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .message-meta {
