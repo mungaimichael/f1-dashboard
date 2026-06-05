@@ -945,11 +945,16 @@ tbody tr:last-child td {
 
 @media (max-width: 560px) {
   .message-compose {
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 
   .message-input {
-    flex: 1 1 100%;
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .message-compose button {
+    width: 100%;
   }
 }
 
