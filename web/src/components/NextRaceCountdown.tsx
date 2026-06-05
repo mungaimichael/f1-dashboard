@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import type { Race } from "../types";
 import { getFlag, formatDate } from "../utils";
 
@@ -43,7 +43,7 @@ function formatSessionTime(time: string | null): string {
   return `${h12}:${m} ${suffix}`;
 }
 
-const digitVariants = {
+const digitVariants: Variants = {
   hidden: { y: 12, opacity: 0, filter: "blur(2px)", scale: 1 },
   visible: { 
     y: 0, 
@@ -61,7 +61,7 @@ const digitVariants = {
   }
 };
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.07 }
