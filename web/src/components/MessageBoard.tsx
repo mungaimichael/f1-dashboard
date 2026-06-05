@@ -11,7 +11,7 @@ type AddMessageVars = { input: { author: string; text: string } };
 function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: number, onDismiss: (id: string) => void }) {
   const x = useMotionValue(0);
   const itemRef = useRef<HTMLLIElement>(null);
-  const [width, setWidth] = useState(300); // Sensible default
+  const [width, setWidth] = useState(300);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
@@ -22,7 +22,6 @@ function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: num
 
   const baseOpacity = Math.max(0.5, 1 - distance * 0.06);
   
-  // Fade out to 0 as it approaches the edge (approx width / 1.5 to ensure it fades smoothly before popping)
   const dragOpacity = useTransform(x, [-width / 1.5, 0, width / 1.5], [0, baseOpacity, 0]);
 
   return (
@@ -41,7 +40,6 @@ function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: num
       onHoverEnd={() => setIsHovered(false)}
       onDragStart={() => setIsHovered(false)}
       onDragEnd={(_, info) => {
-        // Dismiss only if dragged at least a third of the container's width
         if (Math.abs(info.offset.x) > width / 3) {
           onDismiss(msg.id);
         }
@@ -90,7 +88,6 @@ export function MessageBoard() {
   const { messages: liveMessages, connectionState } = useMessageEvents();
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
-  // Historical messages from query + live messages pushed via SSE, filtered by dismissed
   const allMessages = [...(data?.messages ?? []), ...liveMessages].filter(msg => !dismissedIds.has(msg.id));
 
   useEffect(() => {

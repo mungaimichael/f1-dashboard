@@ -9,8 +9,6 @@ type Props = {
 };
 
 export function DriverModal({ driverId, onClose }: Props) {
-  // useLazyQuery: the query does NOT run on mount — we fire it manually below.
-  // This is the key difference from useQuery.
   const [fetchDriver, { data, loading }] = useLazyQuery<DriverDetailData>(GET_DRIVER);
 
   useEffect(() => {

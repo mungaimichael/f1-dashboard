@@ -75,8 +75,7 @@ export function LiveEventFeed({ events, connectionState }: Props) {
 
   function toggleFilter(type: RaceEventType) {
     setActiveFilters((prev) => {
-      // Keep at least one filter active
-      if (prev.has(type) && prev.size === 1) return prev;
+      if (prev.size === 1 && prev.has(type)) return prev;
       const next = new Set(prev);
       next.has(type) ? next.delete(type) : next.add(type);
       return next;

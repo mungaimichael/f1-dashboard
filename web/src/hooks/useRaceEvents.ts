@@ -41,7 +41,6 @@ export function useRaceEvents(url = EVENTS_URL) {
         source.close();
         sourceRef.current = null;
 
-        // Exponential backoff: 1s, 2s, 4s, 8s … capped at 30s
         const attempt = attemptRef.current;
         const delay = Math.min(1000 * 2 ** attempt, 30_000);
         attemptRef.current = attempt + 1;
