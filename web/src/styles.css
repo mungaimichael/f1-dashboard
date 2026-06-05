@@ -1213,25 +1213,25 @@ tbody tr:last-child td {
    Session schedule pills
    ───────────────────────────────────────────── */
 .session-schedule {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin-top: 16px;
   width: 100%;
 }
 
 .session-pill {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   background: var(--bg-raised);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  display: inline-flex;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  gap: 6px;
-  padding: 5px 10px;
+  gap: 12px;
+  padding: 8px 12px;
   transition: border-color var(--duration) var(--ease-out);
 }
 
@@ -1255,6 +1255,24 @@ tbody tr:last-child td {
 .t-digit {
   display: inline-block;
   will-change: transform, opacity, filter;
+}
+
+.row-hover-tooltip {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 24px);
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10;
 }
 
 .next-race-skeleton {
@@ -1475,15 +1493,6 @@ tbody tr:last-child td {
 
   .next-race-name {
     font-size: 1.2rem;
-  }
-
-  .session-schedule {
-    gap: 4px;
-  }
-
-  .session-pill {
-    font-size: 0.62rem;
-    padding: 4px 8px;
   }
 
   .calendar-scroll {

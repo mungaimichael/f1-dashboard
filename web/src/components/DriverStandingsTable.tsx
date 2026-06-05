@@ -1,4 +1,5 @@
-import { memo } from "react";
+import { memo, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import type { DriverStanding } from "../types";
 
 type Props = {
@@ -14,11 +15,15 @@ const DriverStandingRow = memo(function DriverStandingRow({
   driver: DriverStanding;
   onSelect: (id: string) => void;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <tr
       className="driver-row"
       onClick={() => onSelect(driver.id)}
-      title={`View ${driver.name} details`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      title=""
     >
       <td className="rank" data-pos={driver.position}>P{driver.position}</td>
       <td>
@@ -33,7 +38,22 @@ const DriverStandingRow = memo(function DriverStandingRow({
         </div>
       </td>
       <td>{driver.wins}</td>
-      <td className="points">{driver.points}</td>
+      <td className="points" style={{ position: 'relative' }}>
+        {driver.points}
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div
+              className="row-hover-tooltip"
+              initial={{ opacity: 0, x: 8, filter: "blur(2px)", y: "-50%" }}
+              animate={{ opacity: 1, x: 0, filter: "blur(0px)", y: "-50%" }}
+              exit={{ opacity: 0, x: 4, filter: "blur(2px)", y: "-50%" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              View details
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </td>
     </tr>
   );
 });
