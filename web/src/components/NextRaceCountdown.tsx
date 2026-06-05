@@ -43,6 +43,55 @@ function formatSessionTime(time: string | null): string {
   return `${h12}:${m} ${suffix}`;
 }
 
+const digitVariants = {
+  hidden: { y: 12, opacity: 0, filter: "blur(2px)", scale: 1 },
+  visible: { 
+    y: 0, 
+    opacity: 1, 
+    filter: "blur(0px)",
+    scale: 1,
+    transition: { duration: 0.5, ease: [0.34, 1.45, 0.64, 1] } 
+  },
+  exit: { 
+    y: -16, 
+    opacity: 0, 
+    filter: "blur(6px)",
+    scale: 0.85,
+    transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } 
+  }
+};
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.07 }
+  }
+};
+
+function DigitGroup({ value, label }: { value: string, label: string }) {
+  return (
+    <div className="countdown-segment">
+      <span className="countdown-value t-digit-group">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {value.split('').map((char, i) => (
+            <motion.span
+              key={`${i}-${char}`}
+              className="t-digit"
+              variants={digitVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {char}
+            </motion.span>
+          ))}
+        </AnimatePresence>
+      </span>
+      <motion.span variants={digitVariants} className="countdown-label">{label}</motion.span>
+    </div>
+  );
+}
+
 export function NextRaceCountdown({ race, loading }: Props) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
@@ -145,30 +194,17 @@ export function NextRaceCountdown({ race, loading }: Props) {
             <motion.div
               key="countdown"
               className="countdown-digits"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
             >
-              <div className="countdown-segment">
-                <span className="countdown-value">{pad(timeLeft.days)}</span>
-                <span className="countdown-label">Days</span>
-              </div>
-              <span className="countdown-separator" aria-hidden="true">:</span>
-              <div className="countdown-segment">
-                <span className="countdown-value">{pad(timeLeft.hours)}</span>
-                <span className="countdown-label">Hrs</span>
-              </div>
-              <span className="countdown-separator" aria-hidden="true">:</span>
-              <div className="countdown-segment">
-                <span className="countdown-value">{pad(timeLeft.minutes)}</span>
-                <span className="countdown-label">Min</span>
-              </div>
-              <span className="countdown-separator" aria-hidden="true">:</span>
-              {/* Seconds segment re-keys each tick to trigger a CSS pulse */}
-              <div className="countdown-segment countdown-segment--sec" key={timeLeft.seconds}>
-                <span className="countdown-value">{pad(timeLeft.seconds)}</span>
-                <span className="countdown-label">Sec</span>
-              </div>
+              <DigitGroup value={pad(timeLeft.days)} label="Days" />
+              <motion.span variants={digitVariants} className="countdown-separator" aria-hidden="true">:</motion.span>
+              <DigitGroup value={pad(timeLeft.hours)} label="Hrs" />
+              <motion.span variants={digitVariants} className="countdown-separator" aria-hidden="true">:</motion.span>
+              <DigitGroup value={pad(timeLeft.minutes)} label="Min" />
+              <motion.span variants={digitVariants} className="countdown-separator" aria-hidden="true">:</motion.span>
+              <DigitGroup value={pad(timeLeft.seconds)} label="Sec" />
             </motion.div>
           )}
         </AnimatePresence>

@@ -1248,6 +1248,15 @@ tbody tr:last-child td {
 /* ─────────────────────────────────────────────
    Next Race loading skeleton
    ───────────────────────────────────────────── */
+.t-digit-group {
+  display: inline-flex;
+  align-items: baseline;
+}
+.t-digit {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
 .next-race-skeleton {
   display: grid;
   gap: 12px;
