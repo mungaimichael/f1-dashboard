@@ -8,6 +8,7 @@ import { MessageBoard } from "./components/MessageBoard";
 import { NextRaceCountdown } from "./components/NextRaceCountdown";
 import { RaceCalendar } from "./components/RaceCalendar";
 import { Toast } from "./components/Toast";
+import { LoadingIcon } from "./components/LoadingIcon";
 import { GET_DRIVER_STANDINGS, GET_RACE_CALENDAR } from "./graphql/queries";
 import { useRaceEvents } from "./hooks/useRaceEvents";
 import { useToast } from "./hooks/useToast";
@@ -44,7 +45,7 @@ export function App() {
     return () => clearTimeout(timeout);
   }, [theme]);
 
-  const graphqlStatus = loading ? "Loading…" : error ? "Error" : "Ready";
+  const graphqlStatus = error ? "Error" : "Ready";
   const sseLabel =
     connectionState === "reconnecting"
       ? `Reconnecting (${reconnectAttempt})`
@@ -87,7 +88,7 @@ export function App() {
       <section className="status-strip" aria-label="Connection status">
         <div>
           <span>GraphQL</span>
-          <strong>{graphqlStatus}</strong>
+          <strong>{loading ? <LoadingIcon /> : graphqlStatus}</strong>
         </div>
         <div>
           <span>SSE stream</span>

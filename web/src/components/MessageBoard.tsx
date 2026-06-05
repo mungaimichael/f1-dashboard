@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 import { ADD_MESSAGE, GET_MESSAGES } from "../graphql/queries";
 import { useMessageEvents } from "../hooks/useMessageEvents";
 import type { Message } from "../types";
+import { LoadingIcon } from "./LoadingIcon";
 
 type MessagesData = { messages: Message[] };
 type AddMessageVars = { input: { author: string; text: string } };
@@ -146,7 +147,7 @@ export function MessageBoard() {
           type="submit"
           disabled={loading || !author.trim() || !text.trim()}
         >
-          {loading ? "…" : "Send"}
+          {loading ? <LoadingIcon /> : "Send"}
         </button>
       </form>
 

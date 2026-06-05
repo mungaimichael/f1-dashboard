@@ -269,6 +269,10 @@ button:active {
   transform: translateY(0);
 }
 
+button .loading-icon path {
+  stroke: currentColor !important;
+}
+
 /* ─────────────────────────────────────────────
    Status strip
    ───────────────────────────────────────────── */
