@@ -50,7 +50,7 @@ const RaceEventItem = memo(function RaceEventItem({ event, index, isCollapsed }:
           }
       }
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className="event-item"
       style={{ position: "relative" }}
     >

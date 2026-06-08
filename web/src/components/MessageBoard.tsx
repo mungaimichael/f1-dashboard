@@ -36,7 +36,7 @@ function MessageItem({ msg, distance, onDismiss }: { msg: Message, distance: num
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: baseOpacity, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onDragStart={() => setIsHovered(false)}
