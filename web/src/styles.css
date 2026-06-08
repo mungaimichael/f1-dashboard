@@ -133,8 +133,9 @@
   --radius-lg: 20px;
 
   /* Motion */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration: 300ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --duration: 250ms;
 
   font-family: var(--font);
   font-synthesis: none;
@@ -266,7 +267,7 @@ button:hover {
 }
 
 button:active {
-  transform: translateY(0);
+  transform: scale(0.97);
 }
 
 button .loading-icon path {
@@ -778,6 +779,16 @@ tbody tr:last-child td {
   justify-content: center;
   z-index: 1000;
   padding: 24px;
+  opacity: 1;
+  transition: opacity 300ms var(--ease-out), backdrop-filter 300ms var(--ease-out);
+}
+
+@starting-style {
+  .modal-backdrop {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
 }
 
 .modal {
@@ -792,12 +803,16 @@ tbody tr:last-child td {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fade-scale-in 0.3s var(--ease-out);
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out);
 }
 
-@keyframes fade-scale-in {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+@starting-style {
+  .modal {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
 }
 
 .modal-header {
@@ -959,6 +974,77 @@ tbody tr:last-child td {
 }
 
 /* ─────────────────────────────────────────────
+   Toasts (Sonner style)
+   ───────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px var(--shadow-ambient);
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  z-index: 2000;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+}
+
+@starting-style {
+  .toast {
+    opacity: 0;
+    transform: translateY(100%) scale(0.95);
+  }
+}
+
+.toast-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toast-body strong {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.toast-body span {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  margin: -4px -4px -4px 0;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s, transform 0.2s;
+  min-height: auto;
+}
+
+.toast-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  transform: translateY(0);
+}
+
+.toast-close:active {
+  transform: scale(0.95);
+}
+
+/* ─────────────────────────────────────────────
    Reduced motion
    ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -1021,12 +1107,12 @@ tbody tr:last-child td {
    Next Race Countdown — Hero card
    ───────────────────────────────────────────── */
 .next-race-card {
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  background:
-    linear-gradient(135deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px var(--shadow-ambient), inset 0 1px 0 oklch(100% 100% 100% / 0.05);
   display: flex;
   flex-wrap: wrap;
   gap: 28px;
@@ -1035,19 +1121,13 @@ tbody tr:last-child td {
   padding: 28px 32px;
   position: relative;
   overflow: hidden;
+  transition: transform var(--duration) var(--ease-out), border-color var(--duration) var(--ease-out), box-shadow var(--duration) var(--ease-out);
 }
 
-/* subtle radial glow behind the card */
-.next-race-card::before {
-  background: radial-gradient(
-    ellipse 60% 80% at 85% 50%,
-    oklch(40% 0.18 25 / 0.1) 0%,
-    transparent 70%
-  );
-  content: "";
-  inset: 0;
-  pointer-events: none;
-  position: absolute;
+.next-race-card:hover {
+  border-color: var(--border);
+  box-shadow: 0 12px 48px var(--shadow-ambient), inset 0 1px 0 oklch(100% 100% 100% / 0.05);
+  transform: translateY(-2px);
 }
 
 .next-race-info {
