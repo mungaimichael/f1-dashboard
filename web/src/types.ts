@@ -47,6 +47,13 @@ export type Message = {
   createdAt: string;
 };
 
+export type Reaction = {
+  id: string;
+  author: string;
+  photoDataUrl: string;
+  createdAt: string;
+};
+
 export type Session = {
   name: string;
   date: string;

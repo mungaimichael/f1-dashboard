@@ -19,6 +19,13 @@ export type Message = {
   createdAt: string;
 };
 
+export type Reaction = {
+  id: string;
+  author: string;
+  photoDataUrl: string;
+  createdAt: string;
+};
+
 export type RaceEventType =
   | "OVERTAKE"
   | "FASTEST_LAP"

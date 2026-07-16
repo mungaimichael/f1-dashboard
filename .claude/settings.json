@@ -4,7 +4,15 @@
       "Bash(curl -s http://localhost:5174)",
       "Bash(node -e ' *)",
       "PowerShell(npx playwright --version 2>&1)",
-      "PowerShell(node \"C:\\\\tmp\\\\verify-features.cjs\")"
+      "PowerShell(node \"C:\\\\tmp\\\\verify-features.cjs\")",
+      "Bash(timeout 6 npm run dev:server)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(pkill -f \"tsx watch src/index.ts\")",
+      "Bash(lsof -i :4000 -sTCP:LISTEN)",
+      "Bash(/Users/mungai/Library/Android/sdk/platform-tools/adb -s emulator-5554 reverse tcp:4000 tcp:4000)",
+      "Bash(/Users/mungai/Library/Android/sdk/platform-tools/adb -s emulator-5554 reverse --list)",
+      "Bash(/Users/mungai/Library/Android/sdk/platform-tools/adb -s RZ8TA11JDSW reverse tcp:4000 tcp:4000)",
+      "Bash(/Users/mungai/Library/Android/sdk/platform-tools/adb -s RZ8TA11JDSW reverse --list)"
     ],
     "additionalDirectories": [
       "C:\\tmp"

@@ -7,6 +7,7 @@ import { LiveEventFeed } from "./components/LiveEventFeed";
 import { MessageBoard } from "./components/MessageBoard";
 import { NextRaceCountdown } from "./components/NextRaceCountdown";
 import { RaceCalendar } from "./components/RaceCalendar";
+import { RaceReaction } from "./components/RaceReaction";
 import { Toast } from "./components/Toast";
 import { LoadingIcon } from "./components/LoadingIcon";
 import { GET_DRIVER_STANDINGS, GET_RACE_CALENDAR } from "./graphql/queries";
@@ -183,6 +184,10 @@ function Dashboard() {
 
       <ProtectedRoute page="message_board">
         <MessageBoard />
+      </ProtectedRoute>
+
+      <ProtectedRoute page="reactions">
+        <RaceReaction />
       </ProtectedRoute>
 
       {toast ? <Toast event={toast} onDismiss={dismiss} /> : null}

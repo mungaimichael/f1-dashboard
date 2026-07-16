@@ -974,6 +974,136 @@ tbody tr:last-child td {
 }
 
 /* ─────────────────────────────────────────────
+   Race reactions
+   ───────────────────────────────────────────── */
+.reaction-board {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.reaction-board .section-heading {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reaction-compose {
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.reaction-capture-row {
+  display: flex;
+  gap: 8px;
+}
+
+.reaction-error {
+  color: oklch(78% 0.12 25);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.reaction-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reaction-preview img {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  max-height: 240px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.reaction-preview-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.reaction-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  list-style: none;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 16px 20px;
+  scrollbar-color: var(--border) transparent;
+  scrollbar-width: thin;
+}
+
+.reaction-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color var(--duration) var(--ease-out);
+}
+
+.reaction-card:hover {
+  border-color: var(--border);
+}
+
+.reaction-card img {
+  aspect-ratio: 1;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.reaction-meta {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+}
+
+.reaction-meta strong {
+  color: var(--accent-text);
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reaction-meta time {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.reaction-empty {
+  align-items: center;
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  display: flex;
+  font-size: 0.86rem;
+  font-weight: 500;
+  grid-column: 1 / -1;
+  justify-content: center;
+  list-style: none;
+  min-height: 100px;
+}
+
+@media (max-width: 560px) {
+  .reaction-capture-row,
+  .reaction-preview-actions {
+    flex-direction: column;
+  }
+}
+
+/* ─────────────────────────────────────────────
    Toasts (Sonner style)
    ───────────────────────────────────────────── */
 .toast {

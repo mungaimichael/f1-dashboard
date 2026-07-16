@@ -7,11 +7,14 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "android:reverse": "node scripts/adb-reverse.mjs",
+    "android": "npm run build && npx cap sync android && npm run android:reverse && npx cap run android"
   },
   "dependencies": {
     "@apollo/client": "^4.0.7",
     "@capacitor/android": "^8.4.2",
+    "@capacitor/camera": "^8.2.1",
     "@capacitor/core": "^8.4.2",
     "@capacitor/local-notifications": "^8.2.1",
     "graphql": "^16.9.0",

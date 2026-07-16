@@ -75,6 +75,28 @@ export const ADD_MESSAGE = gql`
   }
 `;
 
+export const GET_REACTIONS = gql`
+  query GetReactions {
+    reactions {
+      id
+      author
+      photoDataUrl
+      createdAt
+    }
+  }
+`;
+
+export const ADD_REACTION = gql`
+  mutation AddReaction($input: ReactionInput!) {
+    addReaction(input: $input) {
+      id
+      author
+      photoDataUrl
+      createdAt
+    }
+  }
+`;
+
 export const VIEWER_AND_PERMISSIONS = gql`
   query ViewerAndPermissions {
     viewer {
