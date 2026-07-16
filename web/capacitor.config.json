@@ -1,0 +1,8 @@
+{
+  "appId": "com.f1demo.dashboard",
+  "appName": "F1 Telemetry",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": true
+  }
+}

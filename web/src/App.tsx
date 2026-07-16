@@ -12,9 +12,12 @@ import { LoadingIcon } from "./components/LoadingIcon";
 import { GET_DRIVER_STANDINGS, GET_RACE_CALENDAR } from "./graphql/queries";
 import { useRaceEvents } from "./hooks/useRaceEvents";
 import { useToast } from "./hooks/useToast";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { initRaceNotifications } from "./native/notifications";
+import { ProtectedRoute, IfCan } from "./components/Guards";
 import type { DriverStandingsData, RaceCalendarData } from "./types";
 
-export function App() {
+function Dashboard() {
   const { data, loading, error, refetch } = useQuery<DriverStandingsData>(
     GET_DRIVER_STANDINGS,
     { fetchPolicy: "cache-and-network" }
@@ -27,6 +30,18 @@ export function App() {
     useRaceEvents();
   const { toast, dismiss } = useToast(events);
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
+  
+  const { actor } = useAuth();
+  const isAdmin = actor.roles.includes("f1.admin");
+
+  const toggleRole = () => {
+    localStorage.setItem("f1-mock-roles", isAdmin ? "f1.fan" : "f1.admin");
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    void initRaceNotifications();
+  }, []);
 
   const [theme, setTheme] = useState<"light" | "dark">(
     () => (localStorage.getItem("f1-theme") as "light" | "dark") || 
@@ -62,26 +77,42 @@ export function App() {
           <h1>Live standings &amp; race events</h1>
         </div>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <button
-            type="button"
-            className="theme-toggle"
-            onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
-            aria-label="Toggle theme"
+          <button 
+            type="button" 
+            onClick={toggleRole} 
+            style={{ padding: '6px 12px', borderRadius: 4, background: 'var(--surface2)', color: 'var(--text)', border: '1px solid var(--border)' }}
+            title={`Current roles: ${actor.roles.join(", ")}`}
           >
-            <span className="theme-icon"></span>
-            <motion.div 
-              className="theme-toggle-knob"
-              animate={{ x: theme === 'light' ? 28 : 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            />
+            Role: {isAdmin ? "Admin" : "Fan"}
           </button>
-          <button
-            type="button"
-            id="refresh-standings-btn"
-            onClick={() => void refetch()}
+          
+          <IfCan action="toggle_theme">
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
+              aria-label="Toggle theme"
+            >
+              <span className="theme-icon"></span>
+              <motion.div 
+                className="theme-toggle-knob"
+                animate={{ x: theme === 'light' ? 28 : 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+            </button>
+          </IfCan>
+          <IfCan 
+            action="refresh_standings"
+            fallback={<button type="button" disabled title="Requires Admin Role">Refresh</button>}
           >
-            Refresh
-          </button>
+            <button
+              type="button"
+              id="refresh-standings-btn"
+              onClick={() => void refetch()}
+            >
+              Refresh
+            </button>
+          </IfCan>
         </div>
       </header>
 
@@ -130,20 +161,29 @@ export function App() {
       ) : null}
 
       <div className="dashboard-grid">
-        <DriverStandingsTable
-          standings={data?.driverStandings ?? []}
-          loading={loading && !data}
-          onSelectDriver={setSelectedDriverId}
-        />
-        <LiveEventFeed events={events} connectionState={connectionState} />
+        <ProtectedRoute page="standings">
+          <DriverStandingsTable
+            standings={data?.driverStandings ?? []}
+            loading={loading && !data}
+            onSelectDriver={setSelectedDriverId}
+          />
+        </ProtectedRoute>
+        
+        <ProtectedRoute page="live_feed">
+          <LiveEventFeed events={events} connectionState={connectionState} />
+        </ProtectedRoute>
       </div>
 
-      <RaceCalendar
-        races={calendarData?.raceCalendar ?? []}
-        loading={calendarLoading && !calendarData}
-      />
+      <ProtectedRoute page="calendar">
+        <RaceCalendar
+          races={calendarData?.raceCalendar ?? []}
+          loading={calendarLoading && !calendarData}
+        />
+      </ProtectedRoute>
 
-      <MessageBoard />
+      <ProtectedRoute page="message_board">
+        <MessageBoard />
+      </ProtectedRoute>
 
       {toast ? <Toast event={toast} onDismiss={dismiss} /> : null}
 
@@ -154,5 +194,13 @@ export function App() {
         />
       ) : null}
     </main>
+  );
+}
+
+export function App() {
+  return (
+    <AuthProvider>
+      <Dashboard />
+    </AuthProvider>
   );
 }

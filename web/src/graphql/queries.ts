@@ -74,3 +74,23 @@ export const ADD_MESSAGE = gql`
     }
   }
 `;
+
+export const VIEWER_AND_PERMISSIONS = gql`
+  query ViewerAndPermissions {
+    viewer {
+      actorId
+      contextId
+      roles
+      userType
+    }
+    uiPermissions {
+      groups {
+        id
+        label
+        roles
+        pages
+        actions
+      }
+    }
+  }
+`;

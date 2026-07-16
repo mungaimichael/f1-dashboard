@@ -11,12 +11,16 @@
   },
   "dependencies": {
     "@apollo/client": "^4.0.7",
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/core": "^8.4.2",
+    "@capacitor/local-notifications": "^8.2.1",
     "graphql": "^16.9.0",
     "motion": "^12.40.0",
     "react": "latest",
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.4.2",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "latest",

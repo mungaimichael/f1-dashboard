@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">F1 Telemetry</string>
+    <string name="title_activity_main">F1 Telemetry</string>
+    <string name="package_name">com.f1demo.dashboard</string>
+    <string name="custom_url_scheme">com.f1demo.dashboard</string>
+</resources>

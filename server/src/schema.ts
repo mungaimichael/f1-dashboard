@@ -70,6 +70,25 @@ export const schema = createSchema({
       text: String!
     }
 
+    type Group {
+      id: String!
+      label: String!
+      roles: [String!]!
+      pages: [String!]!
+      actions: [String!]!
+    }
+
+    type UIPermissions {
+      groups: [Group!]!
+    }
+
+    type Viewer {
+      actorId: String!
+      contextId: String!
+      roles: [String!]!
+      userType: String!
+    }
+
     type Query {
       "Current Formula 1 driver standings."
       driverStandings: [DriverStanding!]!
@@ -79,6 +98,9 @@ export const schema = createSchema({
       raceCalendar: [Race!]!
       "All messages posted to the message board."
       messages: [Message!]!
+      
+      viewer: Viewer!
+      uiPermissions: UIPermissions!
     }
 
     type Mutation {
@@ -94,7 +116,37 @@ export const schema = createSchema({
         return standings.find((d) => d.id === id) ?? null;
       },
       raceCalendar: () => getRaceCalendar(),
-      messages: () => messages
+      messages: () => messages,
+      viewer: (_: unknown, __: unknown, context: any) => {
+        const rolesHeader = context.request?.headers.get("x-mock-roles");
+        const roles = rolesHeader ? rolesHeader.split(",") : ["f1.admin"];
+        return {
+          actorId: "mock-user-1",
+          contextId: "global",
+          roles,
+          userType: "user"
+        };
+      },
+      uiPermissions: () => {
+        return {
+          groups: [
+            {
+              id: "admin-group",
+              label: "Admin",
+              roles: ["f1.admin"],
+              pages: ["message_board", "calendar", "live_feed", "standings"],
+              actions: ["refresh_standings", "toggle_theme", "view_driver"]
+            },
+            {
+              id: "fan-group",
+              label: "Fan",
+              roles: ["f1.fan"],
+              pages: ["calendar", "standings", "live_feed"],
+              actions: ["view_driver"]
+            }
+          ]
+        };
+      }
     },
     Mutation: {
       addMessage: (

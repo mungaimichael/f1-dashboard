@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { notifySafetyCar } from "../native/notifications";
 import type { RaceEvent } from "../types";
 
 const TOAST_DURATION_MS = 4000;
@@ -12,6 +13,7 @@ export function useToast(events: RaceEvent[]) {
       const newest = events[0];
       if (newest?.type === "SAFETY_CAR") {
         setToast(newest);
+        void notifySafetyCar(newest);
       }
     }
     prevLengthRef.current = events.length;
